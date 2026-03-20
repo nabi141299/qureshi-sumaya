@@ -510,19 +510,19 @@ export default function App() {
                 <h2 className="text-xl font-bold mb-6 tracking-tight">What are you looking for?</h2>
                 
                 {/* Category Tabs */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-6">
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-300 justify-center ${
+                      className={`flex items-center gap-1 sm:gap-1.5 px-1 sm:px-3 py-2.5 rounded-xl text-[10px] sm:text-[12px] font-bold transition-all duration-300 justify-center ${
                         activeCategory === cat.id
                           ? 'bg-black text-white shadow-lg shadow-black/10 scale-[1.02]'
                           : 'bg-white text-gray-400 border border-gray-100 hover:bg-gray-50'
                       }`}
                     >
                       <span className={activeCategory === cat.id ? 'text-white' : 'text-gray-300'}>
-                        {cat.icon}
+                        {React.cloneElement(cat.icon as React.ReactElement, { className: 'w-3.5 h-3.5 sm:w-4 h-4' })}
                       </span>
                       {cat.name}
                     </button>
@@ -530,7 +530,7 @@ export default function App() {
                 </div>
 
                 {/* Service Grid */}
-                <div className={`${activeCategory === 'tv' ? 'grid grid-cols-3 gap-y-8 gap-x-4' : 'flex flex-col gap-4'} mb-8`}>
+                <div className={`${activeCategory === 'tv' ? 'grid grid-cols-3 gap-y-6 gap-x-2 sm:gap-y-8 sm:gap-x-4' : 'flex flex-col gap-4'} mb-8`}>
                   {(activeCategory === 'tv' ? TV_SERVICES : 
                     activeCategory === 'mobile' ? MOBILE_SERVICES :
                     activeCategory === 'laptop' ? LAPTOP_SERVICES :
@@ -541,12 +541,12 @@ export default function App() {
                           onClick={() => handleServiceClick(service.name)}
                           className="flex flex-col items-center text-center group transition-transform active:scale-95 w-full"
                         >
-                          <div className="w-14 h-14 rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-all duration-300">
-                            <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-[1rem] sm:rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-gray-100 transition-all duration-300">
+                            <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300 scale-90 sm:scale-100">
                               {service.icon}
                             </div>
                           </div>
-                          <span className="text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
+                          <span className="text-[10px] sm:text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
                             {service.name}
                           </span>
                         </button>
@@ -627,35 +627,43 @@ export default function App() {
               {/* Right Column: Key Benefits & Trust */}
               <div className="lg:col-span-7 grid grid-cols-2 gap-4 sm:gap-6">
                 <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4 sm:mb-6">
-                    <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                      <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold">180 Days Warranty</h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">180 Days Warranty</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
+                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
                 </div>
 
                 <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 sm:mb-6">
-                    <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+                      <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold">Same Day Repair</h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Same Day Repair</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
+                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
                 </div>
 
                 <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-4 sm:mb-6">
-                    <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
+                      <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold">Free Pickup & Drop</h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Free Pickup & Drop</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
+                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
                 </div>
 
                 <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 mb-4 sm:mb-6">
-                    <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
+                      <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold">Advanced Bonding</h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Advanced Bonding</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
+                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
                 </div>
 
                 <div className="col-span-2 bg-black rounded-[2.5rem] p-8 sm:p-10 text-white relative overflow-hidden">
@@ -705,7 +713,7 @@ export default function App() {
                 </button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
                 {[
                   { color: 'bg-blue-50', text: 'upto 10% Off on Screen Replacement' },
                   { color: 'bg-green-50', text: 'Free Pickup & Delivery in Bangalore' },
@@ -714,12 +722,14 @@ export default function App() {
                   <motion.div 
                     key={i} 
                     whileHover={{ y: -10 }}
-                    className={`${offer.color} h-56 rounded-[2.5rem] p-10 flex flex-col justify-end border border-white/50 shadow-sm transition-all cursor-pointer`}
+                    className={`${offer.color} h-36 sm:h-56 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-center sm:justify-end border border-white/50 shadow-sm transition-all cursor-pointer`}
                   >
-                    <div className="w-10 h-10 bg-white rounded-xl mb-4 flex items-center justify-center shadow-sm">
-                      <Star className="w-5 h-5 text-black" />
+                    <div className="flex flex-row sm:flex-col items-center gap-3 sm:gap-0">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg sm:rounded-xl mb-0 sm:mb-4 flex items-center justify-center shadow-sm flex-shrink-0">
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
+                      </div>
+                      <h4 className="text-xs sm:text-xl font-bold text-gray-800 leading-tight">{offer.text}</h4>
                     </div>
-                    <h4 className="text-xl font-bold text-gray-800 leading-tight">{offer.text}</h4>
                   </motion.div>
                 ))}
               </div>
@@ -748,38 +758,41 @@ export default function App() {
             </div>
 
             {/* Diagnosis Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {DIAGNOSIS_ISSUES.map((issue, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center sm:items-center text-center sm:text-center group transition-all"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
-                    <div className="text-gray-800 scale-110">
-                      {issue.icon}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 w-full sm:w-auto mb-4 sm:mb-8">
+                    <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <div className="text-gray-800 scale-90 sm:scale-110">
+                        {issue.icon}
+                      </div>
                     </div>
+                    <h3 className="text-sm sm:text-xl font-bold tracking-tight text-left sm:text-center">{issue.title}</h3>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 tracking-tight">{issue.title}</h3>
-                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
+                  
+                  <p className="hidden sm:block text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
                     {issue.desc}
                   </p>
                   
-                  <div className="flex flex-col gap-3 w-full">
+                  <div className="flex flex-col gap-2 sm:gap-3 w-full">
                     <a 
                       href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-[10px] sm:text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
                     >
-                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 fill-[#25d366] text-[#25d366]" />
                       WhatsApp
                     </a>
                     <a 
                       href="tel:+919513134313"
-                      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-blue-50 text-blue-600 rounded-full text-[10px] sm:text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
                     >
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                       Call Now
                     </a>
                   </div>
@@ -864,35 +877,37 @@ export default function App() {
             </div>
 
             {/* TV Size Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
               {TV_SIZES.map((size, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center sm:items-center text-center sm:text-center group transition-all"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
-                    <div className="text-gray-800 scale-110">
-                      <Maximize className="w-8 h-8" />
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 w-full sm:w-auto mb-4 sm:mb-6">
+                    <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <div className="text-gray-800 scale-90 sm:scale-110">
+                        <Maximize className="w-8 h-8" />
+                      </div>
                     </div>
+                    <h3 className="text-sm sm:text-2xl font-bold tracking-tight text-left sm:text-center">{size.label}</h3>
                   </div>
-                  <h3 className="text-2xl font-bold mb-6 tracking-tight">{size.label}</h3>
                   
-                  <div className="flex flex-col gap-3 w-full">
+                  <div className="flex flex-col gap-2 sm:gap-3 w-full">
                     <a 
                       href={`https://wa.me/919513134313?text=I%20want%20to%20request%20${encodeURIComponent(selectedInstallationType || '')}%20service%20for%20a%20${encodeURIComponent(size.label)}%20TV`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-2.5 bg-[#f0fff4] text-[#16a34a] rounded-full text-[10px] sm:text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
                     >
-                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 fill-[#25d366] text-[#25d366]" />
                       WhatsApp
                     </a>
                     <a 
                       href="tel:+919513134313"
-                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-2.5 bg-blue-50 text-blue-600 rounded-full text-[10px] sm:text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
                     >
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                       Call Now
                     </a>
                   </div>
@@ -923,38 +938,41 @@ export default function App() {
             </div>
 
             {/* Screen Issue Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {SCREEN_ISSUES.map((issue, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center sm:items-center text-center sm:text-center group transition-all"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
-                    <div className="text-gray-800 scale-110">
-                      {issue.icon}
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 w-full sm:w-auto mb-4 sm:mb-8">
+                    <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <div className="text-gray-800 scale-90 sm:scale-110">
+                        {issue.icon}
+                      </div>
                     </div>
+                    <h3 className="text-sm sm:text-xl font-bold tracking-tight text-left sm:text-center">{issue.title}</h3>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 tracking-tight">{issue.title}</h3>
-                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
+                  
+                  <p className="hidden sm:block text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
                     {issue.desc}
                   </p>
                   
-                  <div className="flex flex-col gap-3 w-full">
+                  <div className="flex flex-col gap-2 sm:gap-3 w-full">
                     <a 
                       href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-[10px] sm:text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
                     >
-                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 fill-[#25d366] text-[#25d366]" />
                       WhatsApp
                     </a>
                     <a 
                       href="tel:+919513134313"
-                      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-blue-50 text-blue-600 rounded-full text-[10px] sm:text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
                     >
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                       Call Now
                     </a>
                   </div>

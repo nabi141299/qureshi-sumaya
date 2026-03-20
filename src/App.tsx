@@ -28,6 +28,9 @@ import {
   MonitorOff,
   Sun,
   AlignJustify,
+  ShieldCheck,
+  Truck,
+  Cpu,
   Columns2,
   Image as ImageIcon,
   Copy,
@@ -467,22 +470,22 @@ export default function App() {
             exit={{ opacity: 0, y: -10 }}
             className="max-w-7xl mx-auto px-6 py-4 lg:py-8"
           >
-            <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-4xl leading-tight tracking-tight">
+            <h1 className="text-[18px] sm:text-[22px] lg:text-[24px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-2xl leading-tight tracking-tight">
               Expert TV Service: Precision Screen Repair & Panel Replacement
             </h1>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Service Selector */}
-              <div className="lg:col-span-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100 p-6 sm:p-8 lg:p-10">
+              <div className="lg:col-span-5 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100 p-6 sm:p-8 lg:p-10">
                 <h2 className="text-xl font-bold mb-6 tracking-tight">What are you looking for?</h2>
                 
                 {/* Category Tabs */}
-                <div className="flex gap-2 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-bold transition-all duration-300 flex-1 justify-center ${
+                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-300 justify-center ${
                         activeCategory === cat.id
                           ? 'bg-black text-white shadow-lg shadow-black/10 scale-[1.02]'
                           : 'bg-white text-gray-400 border border-gray-100 hover:bg-gray-50'
@@ -591,27 +594,55 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Right Column: Feature Display */}
-              <div className="lg:col-span-8 relative rounded-[3rem] overflow-hidden group shadow-2xl shadow-black/5">
-                <img
-                  src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1200"
-                  alt="Advanced Bonding Technology"
-                  className="w-full h-full object-cover min-h-[400px] lg:min-h-[600px] group-hover:scale-105 transition-transform duration-1000"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                
-                <div className="absolute bottom-16 left-16 right-16 text-white">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <h3 className="text-4xl font-bold mb-6 tracking-tight">Advanced Bonding Technology</h3>
-                    <p className="text-gray-300 max-w-xl text-lg leading-relaxed font-medium opacity-90">
-                      Our in-house state-of-the-art bonding machine ensures factory-quality display repairs and panel replacements.
-                    </p>
-                  </motion.div>
+              {/* Right Column: Key Benefits & Trust */}
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3">180 Days Warranty</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
+                </div>
+
+                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-6">
+                    <Zap className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3">Same Day Repair</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
+                </div>
+
+                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-6">
+                    <Truck className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3">Free Pickup & Drop</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
+                </div>
+
+                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 mb-6">
+                    <Cpu className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3">Advanced Bonding</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
+                </div>
+
+                <div className="sm:col-span-2 bg-black rounded-[2.5rem] p-10 text-white relative overflow-hidden">
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-bold mb-4">Need an Instant Quote?</h3>
+                    <p className="text-gray-400 mb-8 max-w-md">Share your TV model and issue details on WhatsApp for a quick estimate from our experts.</p>
+                    <a 
+                      href="https://wa.me/919876543210" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-[#25d366] text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all"
+                    >
+                      <MessageCircle className="w-6 h-6 fill-current" />
+                      Chat on WhatsApp
+                    </a>
+                  </div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
                 </div>
               </div>
             </div>

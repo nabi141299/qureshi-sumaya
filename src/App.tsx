@@ -136,8 +136,13 @@ export default function App() {
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedService, setExpandedService] = useState<string | null>(null);
 
   const handleServiceClick = (serviceName: string) => {
+    if (serviceName === 'Flex Bonding') {
+      setExpandedService(expandedService === serviceName ? null : serviceName);
+      return;
+    }
     const diagnosisServices = ['LED TV Repair', 'LCD TV Repair', 'QLED TV Repair', 'OLED TV Repair'];
     if (diagnosisServices.includes(serviceName)) {
       setSelectedService(serviceName);
@@ -330,12 +335,6 @@ export default function App() {
 
           {/* Right side */}
           <div className="flex items-center gap-4">
-            <button className="hidden sm:flex items-center gap-2.5 px-5 py-2.5 bg-[#f8f9fa] border border-gray-100 rounded-xl text-[14px] font-bold text-gray-600 hover:bg-gray-100 transition-all">
-              <MapPin className="w-4 h-4 text-gray-400" />
-              Select Location
-              <ChevronDown className="w-4 h-4 opacity-50" />
-            </button>
-
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -464,26 +463,26 @@ export default function App() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="max-w-7xl mx-auto px-6 py-16"
+            className="max-w-7xl mx-auto px-6 py-4 lg:py-8"
           >
-            <h1 className="text-[44px] lg:text-[56px] font-bold mb-16 max-w-4xl leading-[1.1] tracking-tight">
+            <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-4xl leading-tight tracking-tight">
               Expert TV Service: Precision Screen Repair & Panel Replacement
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
               {/* Left Column: Service Selector */}
-              <div className="lg:col-span-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100 p-10">
-                <h2 className="text-2xl font-bold mb-8 tracking-tight">What are you looking for?</h2>
+              <div className="lg:col-span-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100 p-6 sm:p-8 lg:p-10">
+                <h2 className="text-xl font-bold mb-6 tracking-tight">What are you looking for?</h2>
                 
                 {/* Category Tabs */}
-                <div className="flex gap-3 mb-12">
+                <div className="flex gap-2 mb-6">
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-[14px] font-bold transition-all duration-300 ${
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-bold transition-all duration-300 flex-1 justify-center ${
                         activeCategory === cat.id
-                          ? 'bg-black text-white shadow-xl shadow-black/20 scale-[1.02]'
+                          ? 'bg-black text-white shadow-lg shadow-black/10 scale-[1.02]'
                           : 'bg-white text-gray-400 border border-gray-100 hover:bg-gray-50'
                       }`}
                     >
@@ -496,31 +495,85 @@ export default function App() {
                 </div>
 
                 {/* Service Grid */}
-                <div className="grid grid-cols-3 gap-y-12 gap-x-4 mb-14">
+                <div className={`${activeCategory === 'tv' ? 'grid grid-cols-3 gap-y-8 gap-x-4' : 'flex flex-col gap-4'} mb-8`}>
                   {(activeCategory === 'tv' ? TV_SERVICES : 
                     activeCategory === 'mobile' ? MOBILE_SERVICES :
                     activeCategory === 'laptop' ? LAPTOP_SERVICES :
                     TABLET_SERVICES).map((service, i) => (
-                    <button 
-                      key={i} 
-                      onClick={() => handleServiceClick(service.name)}
-                      className="flex flex-col items-center text-center group transition-transform active:scale-95"
-                    >
-                      <div className="w-14 h-14 rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-all duration-300">
-                        <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300">
-                          {service.icon}
+                    <div key={i} className={activeCategory === 'tv' ? '' : 'w-full'}>
+                      {activeCategory === 'tv' ? (
+                        <button 
+                          onClick={() => handleServiceClick(service.name)}
+                          className="flex flex-col items-center text-center group transition-transform active:scale-95 w-full"
+                        >
+                          <div className="w-14 h-14 rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-all duration-300">
+                            <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300">
+                              {service.icon}
+                            </div>
+                          </div>
+                          <span className="text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
+                            {service.name}
+                          </span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-col gap-3">
+                          <button 
+                            onClick={() => handleServiceClick(service.name)}
+                            className={`w-full bg-[#f8f9fa] rounded-[2rem] p-5 border transition-all duration-300 ${
+                              expandedService === service.name ? 'border-black shadow-md' : 'border-gray-100/50 shadow-sm'
+                            }`}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm transition-colors ${
+                                expandedService === service.name ? 'bg-black text-white' : 'bg-white text-black'
+                              }`}>
+                                {service.icon}
+                              </div>
+                              <div className="text-left">
+                                <h3 className="text-[15px] font-bold text-gray-900 leading-tight">{service.name}</h3>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Advanced Repair</p>
+                              </div>
+                            </div>
+                          </button>
+
+                          <AnimatePresence>
+                            {expandedService === service.name && (
+                              <motion.div 
+                                initial={{ opacity: 0, height: 0, y: -10 }}
+                                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                                exit={{ opacity: 0, height: 0, y: -10 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="grid grid-cols-2 gap-3 pt-1">
+                                  <a 
+                                    href="https://wa.me/919876543210" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-[#25d366]/20 hover:scale-[1.02] active:scale-95 transition-all"
+                                  >
+                                    <MessageCircle className="w-4 h-4 fill-current" />
+                                    WhatsApp
+                                  </a>
+                                  <a 
+                                    href="tel:+919876543210"
+                                    className="flex items-center justify-center gap-2 py-3.5 bg-black text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-black/10 hover:scale-[1.02] active:scale-95 transition-all"
+                                  >
+                                    <Phone className="w-4 h-4" />
+                                    Call Now
+                                  </a>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                      </div>
-                      <span className="text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
-                        {service.name}
-                      </span>
-                    </button>
+                      )}
+                    </div>
                   ))}
                 </div>
 
                 {/* Footer Search */}
-                <div className="pt-10 border-t border-gray-50">
-                  <p className="text-[15px] font-bold text-gray-900 mb-5">Can't find what you need?</p>
+                <div className="pt-6 border-t border-gray-50">
+                  <p className="text-[14px] font-bold text-gray-900 mb-3">Can't find what you need?</p>
                   <div className="flex gap-4">
                     <div className="flex-1">
                       <input
@@ -541,7 +594,7 @@ export default function App() {
                 <img
                   src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1200"
                   alt="Advanced Bonding Technology"
-                  className="w-full h-full object-cover min-h-[600px] group-hover:scale-105 transition-transform duration-1000"
+                  className="w-full h-full object-cover min-h-[400px] lg:min-h-[600px] group-hover:scale-105 transition-transform duration-1000"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
@@ -562,7 +615,7 @@ export default function App() {
             </div>
 
             {/* Trust Section */}
-            <div className="mt-20 flex items-center gap-5">
+            <div className="mt-8 flex items-center gap-5">
               <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
                 <Star className="w-6 h-6 text-black fill-current" />
               </div>
@@ -591,9 +644,9 @@ export default function App() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
-                  { color: 'bg-blue-50', text: 'Flat 20% Off on Screen Replacement' },
+                  { color: 'bg-blue-50', text: 'upto 10% Off on Screen Replacement' },
                   { color: 'bg-green-50', text: 'Free Pickup & Delivery in Bangalore' },
-                  { color: 'bg-purple-50', text: '90 Days Warranty on All Repairs' }
+                  { color: 'bg-purple-50', text: 'Up to 180 days warranty on all repairs' }
                 ].map((offer, i) => (
                   <motion.div 
                     key={i} 

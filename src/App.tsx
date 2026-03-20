@@ -199,7 +199,6 @@ export default function App() {
                       <div 
                         className="fixed inset-0 z-10" 
                         onClick={() => setIsServicesOpen(false)}
-                        onMouseEnter={() => setIsServicesOpen(false)}
                       />
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -280,7 +279,6 @@ export default function App() {
                       <div 
                         className="fixed inset-0 z-10" 
                         onClick={() => setIsSupportOpen(false)}
-                        onMouseEnter={() => setIsSupportOpen(false)}
                       />
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}

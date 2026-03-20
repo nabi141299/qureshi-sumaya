@@ -794,21 +794,21 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
               {WALL_MOUNT_TYPES.map((type, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                  className="bg-white rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
                 >
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-6 sm:mb-8 group-hover:bg-gray-100 transition-colors">
-                    <div className="text-gray-800 scale-110">
+                  <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-3 sm:mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-90 sm:scale-110">
                       {type.icon}
                     </div>
                   </div>
                   
-                  <h3 className="text-lg sm:text-2xl font-bold tracking-tight mb-2">{type.title}</h3>
-                  <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                  <h3 className="text-sm sm:text-2xl font-bold tracking-tight mb-1 sm:mb-2">{type.title}</h3>
+                  <p className="text-gray-400 text-[10px] sm:text-sm font-medium mb-4 sm:mb-8 leading-relaxed">
                     {type.desc}
                   </p>
                   
@@ -816,10 +816,10 @@ export default function App() {
                     href={`https://wa.me/919513134313?text=I%20want%20to%20consult%20about%20${encodeURIComponent(type.title)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                    className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-2.5 sm:px-6 sm:py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-[10px] sm:text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
                   >
-                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
-                    Consult on WhatsApp
+                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 fill-[#25d366] text-[#25d366]" />
+                    WhatsApp
                   </a>
                 </motion.div>
               ))}
@@ -974,20 +974,20 @@ export default function App() {
             </div>
 
             {/* Installation Type Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 sm:gap-8 max-w-4xl">
               {INSTALLATION_TYPES.map((type, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                  className="bg-white rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
-                    <div className="text-gray-800 scale-110">
+                  <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-3 sm:mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-90 sm:scale-110">
                       {type.icon}
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-3 tracking-tight">{type.title}</h3>
-                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[240px]">
+                  <h3 className="text-sm sm:text-2xl font-bold mb-1 sm:mb-2 tracking-tight">{type.title}</h3>
+                  <p className="text-gray-400 text-[10px] sm:text-sm font-medium mb-4 sm:mb-8 leading-relaxed max-w-[240px]">
                     {type.desc}
                   </p>
                   
@@ -996,9 +996,9 @@ export default function App() {
                       setSelectedInstallationType(type.title);
                       setView('tv-size-selection');
                     }}
-                    className="flex items-center gap-3 px-8 py-4 bg-[#25d366] text-white rounded-2xl text-sm font-bold hover:bg-[#20ba56] transition-all shadow-lg shadow-[#25d366]/20"
+                    className="flex items-center justify-center gap-1.5 sm:gap-3 px-3 sm:px-8 py-2.5 sm:py-4 bg-[#25d366] text-white rounded-xl sm:rounded-2xl text-[10px] sm:text-sm font-bold hover:bg-[#20ba56] transition-all shadow-lg shadow-[#25d366]/20 w-full"
                   >
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-3 h-3 sm:w-5 sm:h-5" />
                     Select Size
                   </button>
                 </motion.div>
@@ -1033,18 +1033,18 @@ export default function App() {
                 <motion.div
                   key={i}
                   whileHover={{ y: -8 }}
-                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center sm:items-center text-center sm:text-center group transition-all"
+                  className="bg-white rounded-[1.25rem] sm:rounded-[2rem] p-3.5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center sm:items-center text-center sm:text-center group transition-all"
                 >
-                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 w-full sm:w-auto mb-4 sm:mb-6">
-                    <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
-                      <div className="text-gray-800 scale-90 sm:scale-110">
+                  <div className="flex flex-row sm:flex-col items-center gap-3 sm:gap-0 w-full sm:w-auto mb-2 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <div className="text-gray-800 scale-75 sm:scale-110">
                         <Maximize className="w-8 h-8" />
                       </div>
                     </div>
-                    <h3 className="text-sm sm:text-2xl font-bold tracking-tight text-left sm:text-center">{size.label}</h3>
+                    <h3 className="text-xs sm:text-2xl font-bold tracking-tight text-left sm:text-center">{size.label}</h3>
                   </div>
                   
-                  <div className="flex flex-col gap-2 sm:gap-3 w-full">
+                  <div className="flex flex-col gap-1.5 sm:gap-3 w-full">
                     <a 
                       href={`https://wa.me/919513134313?text=I%20want%20to%20request%20${encodeURIComponent(selectedInstallationType || '')}%20service%20for%20a%20${encodeURIComponent(size.label)}%20TV`}
                       target="_blank"

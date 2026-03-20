@@ -39,16 +39,7 @@ import {
   Navigation
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { APIProvider, Map, AdvancedMarker, Pin, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
 
-const API_KEY =
-  process.env.GOOGLE_MAPS_PLATFORM_KEY ||
-  (import.meta as any).env?.VITE_GOOGLE_MAPS_PLATFORM_KEY ||
-  (globalThis as any).GOOGLE_MAPS_PLATFORM_KEY ||
-  '';
-const hasValidKey = Boolean(API_KEY) && API_KEY !== 'YOUR_API_KEY';
-
-const SHOP_LOCATION = { lat: 12.9716, lng: 77.6944 };
 const SHOP_ADDRESS = "iPixel Electronics, #22, Ground Floor, 3rd A Cross, Doddanekundi, Bangalore, Karnataka 560037";
 
 const CATEGORIES = [
@@ -142,94 +133,6 @@ const SCREEN_ISSUES = [
   },
 ];
 
-function LocationSection() {
-  const [markerRef, marker] = useAdvancedMarkerRef();
-  const [infoWindowOpen, setInfoWindowOpen] = useState(true);
-
-  return (
-    <section className="mt-32">
-      <div className="flex flex-col lg:flex-row gap-12">
-        <div className="lg:w-1/3">
-          <h2 className="text-3xl font-bold tracking-tight mb-8">Visit Our Shop</h2>
-          <div className="space-y-8">
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center shrink-0">
-                <MapPin className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-1">Address</h4>
-                <p className="text-gray-900 font-medium leading-relaxed">
-                  {SHOP_ADDRESS}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center shrink-0">
-                <Clock className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-1">Opening Hours</h4>
-                <p className="text-gray-900 font-medium">Monday - Sunday: 10:00 AM - 9:00 PM</p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center shrink-0">
-                <Phone className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-1">Contact</h4>
-                <p className="text-gray-900 font-medium">+91 95131 34313</p>
-              </div>
-            </div>
-
-            <a 
-              href={`https://www.google.com/maps/dir/?api=1&destination=${SHOP_LOCATION.lat},${SHOP_LOCATION.lng}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white rounded-2xl text-sm font-bold hover:bg-gray-900 transition-all shadow-xl shadow-black/10 group"
-            >
-              <Navigation className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              Get Directions
-            </a>
-          </div>
-        </div>
-
-        <div className="lg:w-2/3 h-[500px] rounded-[3rem] overflow-hidden border border-gray-100 shadow-2xl shadow-black/5">
-          <Map
-            defaultCenter={SHOP_LOCATION}
-            defaultZoom={15}
-            mapId="DEMO_MAP_ID"
-            internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
-            style={{ width: '100%', height: '100%' }}
-          >
-            <AdvancedMarker
-              ref={markerRef}
-              position={SHOP_LOCATION}
-              onClick={() => setInfoWindowOpen(true)}
-            >
-              <Pin background="#ff4d4d" glyphColor="#fff" borderColor="#ff4d4d" />
-            </AdvancedMarker>
-
-            {infoWindowOpen && (
-              <InfoWindow
-                anchor={marker}
-                onCloseClick={() => setInfoWindowOpen(false)}
-              >
-                <div className="p-2 max-w-[200px]">
-                  <h4 className="font-bold text-sm mb-1">iPixel Electronics</h4>
-                  <p className="text-xs text-gray-500 leading-tight">Professional TV Repair Services</p>
-                </div>
-              </InfoWindow>
-            )}
-          </Map>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
   const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue'>('home');
@@ -238,53 +141,6 @@ export default function App() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedService, setExpandedService] = useState<string | null>(null);
-
-  if (!hasValidKey) {
-    return (
-      <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',fontFamily:'sans-serif', padding: '20px'}}>
-        <div style={{textAlign:'center',maxWidth:520, background: 'white', padding: '40px', borderRadius: '32px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)'}}>
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="grid grid-cols-2 gap-0.5 w-9 h-9">
-              <div className="bg-[#ff4d4d] rounded-[3px]"></div>
-              <div className="bg-[#4caf50] rounded-[3px]"></div>
-              <div className="bg-[#2196f3] rounded-[3px]"></div>
-              <div className="bg-[#ffeb3b] rounded-[3px]"></div>
-            </div>
-            <div className="flex flex-col leading-none text-left">
-              <span className="text-xl font-bold tracking-tight">iPixel</span>
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-400">Electronics</span>
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold mb-4">Google Maps API Key Required</h2>
-          <p className="text-gray-500 mb-8 leading-relaxed">To display our shop location on the map, please add your Google Maps API key.</p>
-          
-          <div style={{textAlign:'left', background: '#f8f9fa', padding: '24px', borderRadius: '20px', marginBottom: '32px'}}>
-            <p className="font-bold mb-4 text-sm">Follow these steps:</p>
-            <ul style={{lineHeight:'1.8', fontSize: '14px'}} className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center shrink-0 text-[10px] font-bold">1</span>
-                <span>Get an API Key from the <a href="https://console.cloud.google.com/google/maps-apis/credentials" target="_blank" rel="noopener" className="text-blue-600 font-bold hover:underline">Google Cloud Console</a></span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center shrink-0 text-[10px] font-bold">2</span>
-                <span>Open <strong>Settings</strong> (⚙️ gear icon, top-right)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center shrink-0 text-[10px] font-bold">3</span>
-                <span>Select <strong>Secrets</strong></span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center shrink-0 text-[10px] font-bold">4</span>
-                <span>Add <code>GOOGLE_MAPS_PLATFORM_KEY</code> and paste your key</span>
-              </li>
-            </ul>
-          </div>
-          
-          <p className="text-xs text-gray-400">The app will rebuild automatically after you add the secret.</p>
-        </div>
-      </div>
-    );
-  }
 
   const handleServiceClick = (serviceName: string) => {
     if (serviceName === 'Flex Bonding') {
@@ -304,8 +160,7 @@ export default function App() {
   };
 
   return (
-    <APIProvider apiKey={API_KEY} version="weekly">
-      <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
       {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -810,9 +665,6 @@ export default function App() {
                 ))}
               </div>
             </section>
-
-            {/* Location Section */}
-            <LocationSection />
           </motion.main>
         ) : view === 'diagnosis' ? (
           <motion.main 
@@ -1009,6 +861,5 @@ export default function App() {
         </motion.a>
       </div>
     </div>
-    </APIProvider>
   );
 }

@@ -31,7 +31,10 @@ import {
   Columns2,
   Image as ImageIcon,
   Copy,
-  AlertTriangle
+  AlertTriangle,
+  Menu,
+  X,
+  Cable
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -39,7 +42,7 @@ const CATEGORIES = [
   { id: 'tv', name: 'TV', icon: <Tv className="w-4 h-4" /> },
   { id: 'mobile', name: 'Mobile', icon: <Smartphone className="w-4 h-4" /> },
   { id: 'laptop', name: 'Laptop', icon: <Laptop className="w-4 h-4" /> },
-  { id: 'table', name: 'Table', icon: <Tablet className="w-4 h-4" /> },
+  { id: 'tablet', name: 'Tablet', icon: <Tablet className="w-4 h-4" /> },
 ];
 
 const TV_SERVICES = [
@@ -51,6 +54,18 @@ const TV_SERVICES = [
   { name: 'Screen Replacement', icon: <Layers className="w-6 h-6" /> },
   { name: 'Installation', icon: <Settings className="w-6 h-6" /> },
   { name: 'Wall Mount', icon: <Hammer className="w-6 h-6" /> },
+];
+
+const MOBILE_SERVICES = [
+  { name: 'Flex Bonding', icon: <Cable className="w-6 h-6" /> },
+];
+
+const LAPTOP_SERVICES = [
+  { name: 'Flex Bonding', icon: <Cable className="w-6 h-6" /> },
+];
+
+const TABLET_SERVICES = [
+  { name: 'Flex Bonding', icon: <Cable className="w-6 h-6" /> },
 ];
 
 const DIAGNOSIS_ISSUES = [
@@ -118,6 +133,9 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
   const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue'>('home');
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleServiceClick = (serviceName: string) => {
     const diagnosisServices = ['LED TV Repair', 'LCD TV Repair', 'QLED TV Repair', 'OLED TV Repair'];
@@ -157,22 +175,286 @@ export default function App() {
 
             {/* Nav */}
             <nav className="hidden md:flex items-center gap-10">
-              <button className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors">
-                Services <ChevronDown className="w-4 h-4 opacity-50" />
-              </button>
-              <button className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors">
-                Support <ChevronDown className="w-4 h-4 opacity-50" />
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setIsServicesOpen(!isServicesOpen)}
+                  onMouseEnter={() => setIsServicesOpen(true)}
+                  className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors"
+                >
+                  Services <ChevronDown className={`w-4 h-4 opacity-50 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isServicesOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setIsServicesOpen(false)}
+                        onMouseEnter={() => setIsServicesOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        onMouseEnter={() => setIsServicesOpen(true)}
+                        className="absolute top-full left-0 mt-2 w-[320px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 py-4 z-20"
+                      >
+                        <button 
+                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#eef4ff] flex items-center justify-center shrink-0">
+                            <Tv className="w-6 h-6 text-[#3b82f6]" />
+                          </div>
+                          <div>
+                            <div className="text-[16px] font-bold text-[#334155] leading-tight">TV Repair</div>
+                            <div className="text-[14px] font-medium text-[#94a3b8] mt-0.5">Expert TV diagnostics</div>
+                          </div>
+                        </button>
+
+                        <button 
+                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#fff7ed] flex items-center justify-center shrink-0">
+                            <MonitorPlay className="w-6 h-6 text-[#f97316]" />
+                          </div>
+                          <div>
+                            <div className="text-[16px] font-bold text-[#334155] leading-tight">Screen Repair</div>
+                            <div className="text-[14px] font-medium text-[#94a3b8] mt-0.5">Fix display issues</div>
+                          </div>
+                        </button>
+
+                        <button 
+                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#f5f3ff] flex items-center justify-center shrink-0">
+                            <Layers className="w-6 h-6 text-[#8b5cf6]" />
+                          </div>
+                          <div>
+                            <div className="text-[16px] font-bold text-[#334155] leading-tight">Screen Replacement</div>
+                            <div className="text-[14px] font-medium text-[#94a3b8] mt-0.5">New panels for all brands</div>
+                          </div>
+                        </button>
+
+                        <button 
+                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#f8f9fa] flex items-center justify-center shrink-0">
+                            <Hammer className="w-6 h-6 text-[#475569]" />
+                          </div>
+                          <div>
+                            <div className="text-[16px] font-bold text-[#334155] leading-tight">TV Wall Mount</div>
+                            <div className="text-[14px] font-medium text-[#94a3b8] mt-0.5">Installation services</div>
+                          </div>
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="relative">
+                <button 
+                  onClick={() => setIsSupportOpen(!isSupportOpen)}
+                  onMouseEnter={() => setIsSupportOpen(true)}
+                  className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors"
+                >
+                  Support <ChevronDown className={`w-4 h-4 opacity-50 transition-transform ${isSupportOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isSupportOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setIsSupportOpen(false)}
+                        onMouseEnter={() => setIsSupportOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        onMouseEnter={() => setIsSupportOpen(true)}
+                        className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 py-3 z-20"
+                      >
+                        <a 
+                          href="https://wa.me/919513134313"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors group"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#e8fcf0] flex items-center justify-center">
+                            <MessageCircle className="w-6 h-6 text-[#25d366] fill-[#25d366]" />
+                          </div>
+                          <div>
+                            <div className="text-[15px] font-bold text-gray-900">WhatsApp Support</div>
+                            <div className="text-[13px] font-medium text-gray-400">Chat with us instantly</div>
+                          </div>
+                        </a>
+
+                        <a 
+                          href="tel:+919513134313"
+                          className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors group"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#eef4ff] flex items-center justify-center">
+                            <Phone className="w-6 h-6 text-[#3b82f6]" />
+                          </div>
+                          <div>
+                            <div className="text-[15px] font-bold text-gray-900">Call Us</div>
+                            <div className="text-[13px] font-medium text-gray-400">+91 95131 34313</div>
+                          </div>
+                        </a>
+
+                        <a 
+                          href="mailto:help@ipixelelectronics.com"
+                          className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors group"
+                        >
+                          <div className="w-12 h-12 rounded-2xl bg-[#f5f3ff] flex items-center justify-center">
+                            <HelpCircle className="w-6 h-6 text-[#8b5cf6]" />
+                          </div>
+                          <div>
+                            <div className="text-[15px] font-bold text-gray-900">General Help</div>
+                            <div className="text-[13px] font-medium text-gray-400">help@ipixelelectronics.com</div>
+                          </div>
+                        </a>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
             </nav>
           </div>
 
           {/* Right side */}
-          <button className="flex items-center gap-2.5 px-5 py-2.5 bg-[#f8f9fa] border border-gray-100 rounded-xl text-[14px] font-bold text-gray-600 hover:bg-gray-100 transition-all">
-            <MapPin className="w-4 h-4 text-gray-400" />
-            Select Location
-            <ChevronDown className="w-4 h-4 opacity-50" />
-          </button>
+          <div className="flex items-center gap-4">
+            <button className="hidden sm:flex items-center gap-2.5 px-5 py-2.5 bg-[#f8f9fa] border border-gray-100 rounded-xl text-[14px] font-bold text-gray-600 hover:bg-gray-100 transition-all">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              Select Location
+              <ChevronDown className="w-4 h-4 opacity-50" />
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
+            >
+              <div className="px-6 py-8 flex flex-col gap-8">
+                <div>
+                  <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Services</div>
+                  <div className="grid grid-cols-1 gap-3">
+                    <button 
+                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#eef4ff] flex items-center justify-center">
+                        <Tv className="w-5 h-5 text-[#3b82f6]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">TV Repair</div>
+                        <div className="text-xs text-gray-400">Expert TV diagnostics</div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#fff7ed] flex items-center justify-center">
+                        <MonitorPlay className="w-5 h-5 text-[#f97316]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Screen Repair</div>
+                        <div className="text-xs text-gray-400">Fix display issues</div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#f5f3ff] flex items-center justify-center">
+                        <Layers className="w-5 h-5 text-[#8b5cf6]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Screen Replacement</div>
+                        <div className="text-xs text-gray-400">New panels for all brands</div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#f8f9fa] flex items-center justify-center">
+                        <Hammer className="w-5 h-5 text-gray-500" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">TV Wall Mount</div>
+                        <div className="text-xs text-gray-400">Installation services</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Support</div>
+                  <div className="grid grid-cols-1 gap-3">
+                    <a 
+                      href="https://wa.me/919513134313"
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#e8fcf0] flex items-center justify-center">
+                        <MessageCircle className="w-5 h-5 text-[#25d366] fill-[#25d366]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">WhatsApp Support</div>
+                        <div className="text-xs text-gray-400">Chat with us instantly</div>
+                      </div>
+                    </a>
+                    <a 
+                      href="tel:+919513134313"
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#eef4ff] flex items-center justify-center">
+                        <Phone className="w-5 h-5 text-[#3b82f6]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Call Us</div>
+                        <div className="text-xs text-gray-400">+91 95131 34313</div>
+                      </div>
+                    </a>
+                    <a 
+                      href="mailto:help@ipixelelectronics.com"
+                      className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#f5f3ff] flex items-center justify-center">
+                        <HelpCircle className="w-5 h-5 text-[#8b5cf6]" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">General Help</div>
+                        <div className="text-xs text-gray-400">help@ipixelelectronics.com</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <AnimatePresence mode="wait">
@@ -215,7 +497,10 @@ export default function App() {
 
                 {/* Service Grid */}
                 <div className="grid grid-cols-3 gap-y-12 gap-x-4 mb-14">
-                  {TV_SERVICES.map((service, i) => (
+                  {(activeCategory === 'tv' ? TV_SERVICES : 
+                    activeCategory === 'mobile' ? MOBILE_SERVICES :
+                    activeCategory === 'laptop' ? LAPTOP_SERVICES :
+                    TABLET_SERVICES).map((service, i) => (
                     <button 
                       key={i} 
                       onClick={() => handleServiceClick(service.name)}
@@ -432,6 +717,62 @@ export default function App() {
           </motion.main>
         )}
       </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-100 py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="grid grid-cols-2 gap-0.5 w-8 h-8">
+                  <div className="bg-[#ff4d4d] rounded-[2px]"></div>
+                  <div className="bg-[#4caf50] rounded-[2px]"></div>
+                  <div className="bg-[#2196f3] rounded-[2px]"></div>
+                  <div className="bg-[#ffeb3b] rounded-[2px]"></div>
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-lg font-bold tracking-tight">iPixel</span>
+                  <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-gray-400">Electronics</span>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
+                iPixel Electronics is a leading TV repair service provider in Bangalore, specializing in screen repair and panel replacement for all major brands.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-6">Support</h4>
+              <ul className="flex flex-col gap-4">
+                <li>
+                  <a href="https://wa.me/919513134313" className="text-gray-500 hover:text-black transition-colors text-sm font-medium">WhatsApp Support</a>
+                </li>
+                <li>
+                  <a href="tel:+919513134313" className="text-gray-500 hover:text-black transition-colors text-sm font-medium">Call Us</a>
+                </li>
+                <li>
+                  <a href="mailto:help@ipixelelectronics.com" className="text-gray-500 hover:text-black transition-colors text-sm font-medium">General Help</a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-6">Services</h4>
+              <ul className="flex flex-col gap-4">
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">LED TV Repair</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">Screen Repair</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">Panel Replacement</button></li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-xs">© 2026 iPixel Electronics. All rights reserved.</p>
+            <div className="flex gap-8">
+              <a href="#" className="text-gray-400 hover:text-black transition-colors text-xs">Privacy Policy</a>
+              <a href="#" className="text-gray-400 hover:text-black transition-colors text-xs">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Footer Space */}
       <div className="h-20" />

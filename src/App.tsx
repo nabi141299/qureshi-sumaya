@@ -625,43 +625,43 @@ export default function App() {
               </div>
 
               {/* Right Column: Key Benefits & Trust */}
-              <div className="lg:col-span-7 grid grid-cols-2 gap-4 sm:gap-6">
-                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
-                      <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+              <div className="lg:col-span-7 grid grid-cols-2 gap-3 sm:gap-6">
+                <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-0 mb-2 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                      <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold">180 Days Warranty</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">180 Days Warranty</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                      <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-0 mb-2 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+                      <Zap className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold">Same Day Repair</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Same Day Repair</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
-                      <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-0 mb-2 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
+                      <Truck className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold">Free Pickup & Drop</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Free Pickup & Drop</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
-                      <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex flex-row sm:flex-col items-center gap-2 sm:gap-0 mb-2 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
+                      <Cpu className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-bold">Advanced Bonding</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Advanced Bonding</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
                 </div>
@@ -713,7 +713,7 @@ export default function App() {
                 </button>
               </div>
               
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
                 {[
                   { color: 'bg-blue-50', text: 'upto 10% Off on Screen Replacement' },
                   { color: 'bg-green-50', text: 'Free Pickup & Delivery in Bangalore' },
@@ -722,7 +722,7 @@ export default function App() {
                   <motion.div 
                     key={i} 
                     whileHover={{ y: -10 }}
-                    className={`${offer.color} h-36 sm:h-56 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col justify-center sm:justify-end border border-white/50 shadow-sm transition-all cursor-pointer`}
+                    className={`${offer.color} h-28 sm:h-56 rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-10 flex flex-col justify-center sm:justify-end border border-white/50 shadow-sm transition-all cursor-pointer`}
                   >
                     <div className="flex flex-row sm:flex-col items-center gap-3 sm:gap-0">
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg sm:rounded-xl mb-0 sm:mb-4 flex items-center justify-center shadow-sm flex-shrink-0">

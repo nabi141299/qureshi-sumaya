@@ -3,420 +3,427 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Phone, 
-  MessageCircle, 
-  Tv, 
-  CheckCircle, 
+  Search, 
   MapPin, 
+  ChevronRight, 
+  Star, 
+  ShieldCheck, 
   Clock, 
-  Menu, 
-  X, 
-  ChevronRight,
-  ShieldCheck,
+  CheckCircle2, 
+  Phone, 
+  MessageCircle,
+  Tv,
+  Monitor,
   Wrench,
-  Monitor
+  ArrowLeft,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const TV_TYPES = [
-  { id: 'led', name: 'LED TV', icon: <Monitor className="w-6 h-6" />, description: 'Standard high-definition display repair' },
-  { id: 'lcd', name: 'LCD TV', icon: <Tv className="w-6 h-6" />, description: 'Classic liquid crystal display service' },
-  { id: 'qled', name: 'QLED TV', icon: <Monitor className="w-6 h-6 text-blue-400" />, description: 'Quantum dot display panel replacement' },
-  { id: 'oled', name: 'OLED TV', icon: <Tv className="w-6 h-6 text-indigo-400" />, description: 'Organic LED premium panel repair' },
+const TV_SERVICES = [
+  { id: 'led', name: 'LED TV Repair', icon: <Monitor className="w-8 h-8 text-slate-700" />, color: 'bg-slate-50' },
+  { id: 'lcd', name: 'LCD TV Repair', icon: <Tv className="w-8 h-8 text-slate-700" />, color: 'bg-slate-50' },
+  { id: 'qled', name: 'QLED Specialist', icon: <Monitor className="w-8 h-8 text-uc-navy" />, color: 'bg-blue-50' },
+  { id: 'oled', name: 'OLED Screen Care', icon: <Tv className="w-8 h-8 text-indigo-600" />, color: 'bg-indigo-50' },
 ];
 
-const SERVICES = [
-  { title: 'Panel Replacement', description: 'Cracked or damaged screen? We provide genuine panel replacements for all major brands.' },
-  { title: 'Display Issues', description: 'Fixing lines on screen, black spots, or flickering displays with precision.' },
-  { title: 'Motherboard Repair', description: 'Expert diagnosis and repair of TV motherboards and power supply units.' },
-  { title: 'Backlight Service', description: 'Restoring brightness and clarity to dim or dark TV screens.' },
+const ISSUES = [
+  { id: 'power', name: 'No Power' },
+  { id: 'sound', name: 'Sound Issue' },
+  { id: 'display', name: 'Display Crack' },
+  { id: 'lines', name: 'Lines on Screen' },
+  { id: 'flicker', name: 'Flickering' },
+  { id: 'other', name: 'Other Issues' },
+];
+
+const LOCATIONS = [
+  'Doddanakundi',
+  'Gururaja Layout',
+  'Whitefield',
+  'Marathahalli',
+  'Indiranagar',
+  'Koramangala',
+  'HSR Layout',
+  'Other Bangalore Location'
 ];
 
 export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedTv, setSelectedTv] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [step, setStep] = useState(1);
+  const [booking, setBooking] = useState({
+    type: '',
+    issue: '',
+    location: ''
+  });
+  const [showBooking, setShowBooking] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const phoneNumber = "9513134313";
   const whatsappLink = `https://wa.me/91${phoneNumber}`;
 
+  const handleNext = (field: string, value: string) => {
+    setBooking(prev => ({ ...prev, [field]: value }));
+    setStep(prev => prev + 1);
+  };
+
+  const resetBooking = () => {
+    setStep(1);
+    setBooking({ type: '', issue: '', location: '' });
+    setShowBooking(false);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
-      {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-950/80 backdrop-blur-md border-b border-white/10 py-3' : 'bg-transparent py-5'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/20">
-              <Tv className="text-white w-6 h-6" />
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-uc-navy rounded flex items-center justify-center">
+                <Tv className="text-white w-5 h-5" />
+              </div>
+              <span className="text-lg font-bold tracking-tight text-uc-navy">iPixel <span className="text-slate-400 font-medium">Electronics</span></span>
             </div>
-            <span className="text-xl font-bold tracking-tight text-white uppercase">ipixel <span className="text-blue-500">electronics</span></span>
+            <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
+              <MapPin className="w-4 h-4 text-uc-navy" />
+              <span>Bangalore</span>
+            </div>
           </div>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#services" className="text-sm font-medium hover:text-blue-400 transition-colors">Services</a>
-            <a href="#book" className="text-sm font-medium hover:text-blue-400 transition-colors">Book Repair</a>
-            <a href="#about" className="text-sm font-medium hover:text-blue-400 transition-colors">About</a>
-            <a 
-              href={`tel:${phoneNumber}`}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-600/20"
-            >
+          
+          <div className="flex items-center gap-4">
+            <a href={`tel:${phoneNumber}`} className="hidden sm:flex items-center gap-2 text-sm font-semibold text-uc-navy">
               <Phone className="w-4 h-4" />
-              Call Now
+              {phoneNumber}
             </a>
+            <button 
+              onClick={() => setShowBooking(true)}
+              className="bg-uc-navy text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-uc-navy/10 hover:bg-uc-navy/90 transition-all"
+            >
+              Book Now
+            </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-slate-400 hover:text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </button>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+      {/* Hero Section */}
+      <section className="relative py-16 lg:py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-slate-950 pt-24 px-6 md:hidden"
+            className="mb-12"
           >
-            <div className="flex flex-col gap-6 text-center">
-              <a href="#services" onClick={() => setIsMenuOpen(false)} className="text-2xl font-semibold">Services</a>
-              <a href="#book" onClick={() => setIsMenuOpen(false)} className="text-2xl font-semibold">Book Repair</a>
-              <a href="#about" onClick={() => setIsMenuOpen(false)} className="text-2xl font-semibold">About</a>
-              <a 
-                href={`tel:${phoneNumber}`}
-                className="flex items-center justify-center gap-3 bg-blue-600 text-white py-4 rounded-2xl text-xl font-bold"
-              >
-                <Phone /> Call 9513134313
-              </a>
+            <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+              Professional TV Repair <br />
+              <span className="text-uc-navy">at Home in 60 Minutes.</span>
+            </h1>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-10">
+              Trusted by thousands in Doddanakundi. Specialized service for LED, LCD, QLED, and OLED TVs.
+            </p>
+
+            {/* Search Bar */}
+            <div className="relative max-w-2xl mx-auto">
+              <div className="flex items-center bg-white border-2 border-slate-100 rounded-2xl p-2 shadow-xl shadow-slate-200/50 focus-within:border-uc-navy transition-all">
+                <Search className="w-6 h-6 text-slate-400 ml-4" />
+                <input 
+                  type="text" 
+                  placeholder="Search for TV Repair (LED, LCD, QLED, OLED)" 
+                  className="flex-1 px-4 py-3 outline-none text-lg placeholder:text-slate-400"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button 
+                  onClick={() => setShowBooking(true)}
+                  className="hidden sm:block bg-uc-navy text-white px-8 py-3 rounded-xl font-bold"
+                >
+                  Search
+                </button>
+              </div>
+              <div className="mt-4 flex items-center justify-center gap-6 text-sm font-medium text-slate-400">
+                <div className="flex items-center gap-1.5">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-slate-900">4.8/5</span> Average Rating
+                </div>
+                <div className="w-1 h-1 bg-slate-200 rounded-full" />
+                <div>500+ Repairs Completed this month</div>
+              </div>
             </div>
           </motion.div>
+
+          {/* Hero Image / Illustration */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="relative w-full max-w-4xl aspect-[21/9] rounded-3xl overflow-hidden bg-slate-100 border border-slate-200"
+          >
+            <img 
+              src="https://picsum.photos/seed/technician/1200/600" 
+              alt="Professional Technician" 
+              className="w-full h-full object-cover opacity-80"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Service Selection Grid */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Our Specialized Services</h2>
+            <p className="text-slate-500">Select your TV technology for expert care</p>
+          </div>
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {TV_SERVICES.map((service) => (
+              <motion.button
+                key={service.id}
+                whileHover={{ y: -4 }}
+                onClick={() => {
+                  setBooking(prev => ({ ...prev, type: service.id }));
+                  setStep(2);
+                  setShowBooking(true);
+                }}
+                className="flex flex-col items-center p-6 sm:p-8 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+              >
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl ${service.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  {service.icon}
+                </div>
+                <span className="font-bold text-slate-900">{service.name}</span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                <ShieldCheck className="w-8 h-8 text-uc-navy" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Professional Technicians</h3>
+              <p className="text-slate-500">Every technician is background-verified and expert-trained.</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
+                <Wrench className="w-8 h-8 text-uc-green" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Transparent Pricing</h3>
+              <p className="text-slate-500">Upfront quotes with no hidden charges. Pay only for what you see.</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-6">
+                <Clock className="w-8 h-8 text-indigo-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">90-Day Warranty</h3>
+              <p className="text-slate-500">We stand by our work. All repairs come with a 90-day service guarantee.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Location Banner */}
+      <section className="bg-uc-navy py-12">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-white text-xl sm:text-2xl font-bold mb-4">
+            Serving: Doddanakundi, Gururaja Layout, and all of Bangalore.
+          </h2>
+          <p className="text-blue-200">Get your TV fixed today by the best in the city.</p>
+        </div>
+      </section>
+
+      {/* Floating WhatsApp */}
+      <a 
+        href={whatsappLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 bg-uc-green text-white p-4 rounded-full shadow-2xl shadow-uc-green/40 hover:scale-110 transition-transform flex items-center gap-2 group"
+      >
+        <MessageCircle className="w-6 h-6" />
+        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-bold">WhatsApp Us</span>
+      </a>
+
+      {/* Booking Modal */}
+      <AnimatePresence>
+        {showBooking && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={resetBooking}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {step > 1 && (
+                    <button onClick={() => setStep(step - 1)} className="p-1 hover:bg-slate-100 rounded-lg">
+                      <ArrowLeft className="w-5 h-5 text-slate-500" />
+                    </button>
+                  )}
+                  <h3 className="font-bold text-lg">Book TV Service</h3>
+                </div>
+                <button onClick={resetBooking} className="p-1 hover:bg-slate-100 rounded-lg">
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6">
+                {/* Progress Bar */}
+                <div className="flex gap-2 mb-8">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? 'bg-uc-navy' : 'bg-slate-100'}`} />
+                  ))}
+                </div>
+
+                {step === 1 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h4 className="text-xl font-bold mb-6">What type of TV do you have?</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      {TV_SERVICES.map((s) => (
+                        <button 
+                          key={s.id}
+                          onClick={() => handleNext('type', s.name)}
+                          className="p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left"
+                        >
+                          <div className="mb-2">{s.icon}</div>
+                          <span className="font-bold text-sm">{s.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h4 className="text-xl font-bold mb-6">What is the issue?</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {ISSUES.map((i) => (
+                        <button 
+                          key={i.id}
+                          onClick={() => handleNext('issue', i.name)}
+                          className="p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left font-semibold text-sm"
+                        >
+                          {i.name}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                    <h4 className="text-xl font-bold mb-6">Select your location in Bangalore</h4>
+                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                      {LOCATIONS.map((l) => (
+                        <button 
+                          key={l}
+                          onClick={() => handleNext('location', l)}
+                          className="w-full p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left font-semibold flex items-center justify-between group"
+                        >
+                          {l}
+                          <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-uc-navy" />
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 4 && (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-center">
+                    <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-10 h-10 text-uc-green" />
+                    </div>
+                    <h4 className="text-2xl font-bold mb-2">Almost there!</h4>
+                    <p className="text-slate-500 mb-8">
+                      You've selected a <span className="text-slate-900 font-bold">{booking.type}</span> repair for <span className="text-slate-900 font-bold">{booking.issue}</span> in <span className="text-slate-900 font-bold">{booking.location}</span>.
+                    </p>
+                    <div className="space-y-3">
+                      <a 
+                        href={`tel:${phoneNumber}`}
+                        className="block w-full bg-uc-navy text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-uc-navy/20"
+                      >
+                        Call to Confirm
+                      </a>
+                      <a 
+                        href={whatsappLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full bg-uc-green text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-uc-green/20"
+                      >
+                        Confirm on WhatsApp
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px]" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-6">
-                <ShieldCheck className="w-4 h-4" />
-                Certified Technicians
-              </span>
-              <h1 className="text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-                Expert TV Repair & <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Panel Replacement</span>
-              </h1>
-              <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl">
-                Specializing in all types of display and panel replacements with professional precision. We offer a <span className="text-white font-semibold">180-day warranty</span> on all repairs.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a 
-                  href="#book"
-                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2"
-                >
-                  Book a Repair
-                  <ChevronRight className="w-5 h-5" />
-                </a>
-                <a 
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl shadow-emerald-600/20 flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  WhatsApp Us
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Service Selection (Interactive) */}
-      <section id="book" className="py-24 bg-slate-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-4">Book a Repair</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">Select your TV type to get started with our expert diagnostic service.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TV_TYPES.map((type) => (
-              <motion.div
-                key={type.id}
-                whileHover={{ y: -5 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedTv(type.id)}
-                className={`cursor-pointer p-8 rounded-3xl border-2 transition-all duration-300 ${
-                  selectedTv === type.id 
-                    ? 'bg-blue-600/10 border-blue-500 shadow-2xl shadow-blue-500/20' 
-                    : 'bg-slate-900 border-white/5 hover:border-white/20'
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
-                  selectedTv === type.id ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {type.icon}
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">{type.name}</h3>
-                <p className="text-sm text-slate-400">{type.description}</p>
-                {selectedTv === type.id && (
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="mt-4 flex items-center gap-2 text-blue-400 text-sm font-bold"
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    Selected
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-
-          {selectedTv && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-12 p-8 rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center"
-            >
-              <h4 className="text-2xl font-bold mb-2">Great Choice!</h4>
-              <p className="mb-6 opacity-90">Our experts are ready to fix your {TV_TYPES.find(t => t.id === selectedTv)?.name}.</p>
-              <a 
-                href={`tel:${phoneNumber}`}
-                className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-slate-100 transition-colors"
-              >
-                <Phone className="w-5 h-5" />
-                Call for Instant Quote
-              </a>
-            </motion.div>
-          )}
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section id="services" className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-end justify-between mb-16 gap-6">
-            <div className="max-w-2xl">
-              <h2 className="text-3xl lg:text-5xl font-bold text-white mb-4">Our Specializations</h2>
-              <p className="text-slate-400">From basic display issues to complex panel replacements, we handle everything with professional care.</p>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2 text-blue-400 font-bold">
-                <Wrench className="w-5 h-5" />
-                Genuine Parts
-              </div>
-              <div className="flex items-center gap-2 text-blue-400 font-bold">
-                <ShieldCheck className="w-5 h-5" />
-                Warranty Included
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {SERVICES.map((service, index) => (
-              <div 
-                key={index}
-                className="group p-8 rounded-3xl bg-slate-900 border border-white/5 hover:border-blue-500/30 transition-all duration-300"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-3">{service.title}</h3>
-                    <p className="text-slate-400 leading-relaxed">{service.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* About Us */}
-      <section id="about" className="py-24 bg-slate-900/30 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative">
-              <div className="aspect-square rounded-3xl overflow-hidden bg-slate-800 border border-white/10 relative z-10">
-                <img 
-                  src="https://picsum.photos/seed/electronics/800/800" 
-                  alt="TV Repair Workshop" 
-                  className="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                <div className="absolute bottom-8 left-8 right-8">
-                  <div className="p-6 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-white/10">
-                    <p className="text-white font-bold text-lg mb-1">10+ Years Experience</p>
-                    <p className="text-slate-400 text-sm">Serving thousands of happy customers in the region.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -top-10 -left-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl" />
-            </div>
-
-            <div>
-              <h2 className="text-3xl lg:text-5xl font-bold text-white mb-8">Precision in Every Pixel</h2>
-              <div className="space-y-6 text-slate-400 text-lg leading-relaxed">
-                <p>
-                  At <span className="text-white font-semibold">ipixel electronics</span>, we understand that your TV is the centerpiece of your home entertainment. Our mission is to restore your viewing experience with unmatched precision and care.
-                </p>
-                <p>
-                  We specialize in all types of display and panel replacements, from standard LED units to high-end OLED and QLED panels. Our technicians are trained to handle the most delicate components with professional expertise.
-                </p>
-                <ul className="space-y-4 pt-4">
-                  {[
-                    'Genuine OEM Panel Replacements',
-                    'Advanced Diagnostic Equipment',
-                    '180-Day Comprehensive Warranty',
-                    'Doorstep Pickup & Delivery Available'
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-white font-medium">
-                      <div className="w-6 h-6 rounded-full bg-blue-600/20 flex items-center justify-center text-blue-500">
-                        <CheckCircle className="w-4 h-4" />
-                      </div>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact & CTA */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-8 lg:p-20 relative overflow-hidden shadow-2xl shadow-blue-600/20">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-            
-            <div className="relative z-10 text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl lg:text-6xl font-extrabold text-white mb-8">Ready to Fix Your TV?</h2>
-              <p className="text-xl text-blue-100 mb-12">Don't settle for a broken screen. Get a professional repair today and enjoy your favorite shows again.</p>
-              
-              <div className="flex flex-col items-center gap-8">
-                <div className="flex flex-col items-center">
-                  <span className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-2">Call us directly</span>
-                  <a 
-                    href={`tel:${phoneNumber}`}
-                    className="text-4xl lg:text-6xl font-black text-white hover:scale-105 transition-transform"
-                  >
-                    {phoneNumber}
-                  </a>
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-4">
-                  <a 
-                    href={whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-xl flex items-center gap-3 hover:bg-slate-100 transition-all hover:scale-105 shadow-xl"
-                  >
-                    <MessageCircle className="w-6 h-6" />
-                    WhatsApp Now
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="bg-slate-950 pt-20 pb-10 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                  <Tv className="text-white w-5 h-5" />
-                </div>
-                <span className="text-xl font-bold tracking-tight text-white uppercase">ipixel <span className="text-blue-500">electronics</span></span>
-              </div>
-              <p className="text-slate-400 max-w-sm mb-8">
-                Bangalore's trusted destination for premium TV repair and panel replacement services. Professional precision for every pixel.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-colors">
-                  <span className="sr-only">Facebook</span>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-colors">
-                  <span className="sr-only">Instagram</span>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-              </div>
-            </div>
-
+      <footer className="bg-slate-900 text-white pt-16 pb-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             <div>
-              <h4 className="text-white font-bold mb-6">Contact Info</h4>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3 text-slate-400">
-                  <Phone className="w-5 h-5 text-blue-500 shrink-0" />
-                  <span>+91 9513134313</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-400">
-                  <MapPin className="w-5 h-5 text-blue-500 shrink-0" />
-                  <span>Bangalore, Karnataka, India</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-400">
-                  <Clock className="w-5 h-5 text-blue-500 shrink-0" />
-                  <div>
-                    <p>Mon - Sat: 10:00 AM - 8:00 PM</p>
-                    <p>Sun: 11:00 AM - 4:00 PM</p>
-                  </div>
-                </li>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                  <Tv className="text-uc-navy w-5 h-5" />
+                </div>
+                <span className="text-xl font-bold tracking-tight">iPixel Electronics</span>
+              </div>
+              <p className="text-slate-400 mb-6">
+                Professional TV repair services at your doorstep. Quality service, transparent pricing, and expert care.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-bold mb-6">Service Areas</h4>
+              <ul className="space-y-3 text-slate-400">
+                <li>Doddanakundi</li>
+                <li>Gururaja Layout</li>
+                <li>Whitefield</li>
+                <li>Marathahalli</li>
+                <li>Indiranagar</li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-6">Quick Links</h4>
+              <h4 className="font-bold mb-6">Contact Us</h4>
               <ul className="space-y-4 text-slate-400">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Home</a></li>
-                <li><a href="#services" className="hover:text-blue-400 transition-colors">Services</a></li>
-                <li><a href="#book" className="hover:text-blue-400 transition-colors">Book Repair</a></li>
-                <li><a href="#about" className="hover:text-blue-400 transition-colors">About Us</a></li>
+                <li className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-uc-green" />
+                  {phoneNumber}
+                </li>
+                <li className="flex items-center gap-3">
+                  <MapPin className="w-5 h-5 text-uc-green" />
+                  Bangalore, Karnataka
+                </li>
+                <li className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-uc-green" />
+                  Mon - Sat: 10 AM - 8 PM
+                </li>
               </ul>
             </div>
           </div>
-
-          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
-            <p>© 2026 ipixel electronics. All rights reserved.</p>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-slate-300">Privacy Policy</a>
-              <a href="#" className="hover:text-slate-300">Terms of Service</a>
-            </div>
+          
+          <div className="pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+            <p>© 2026 iPixel Electronics. All rights reserved.</p>
           </div>
         </div>
       </footer>

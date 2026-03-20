@@ -3,6 +3,8 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-uc-navy: #004AAD;
+  --color-uc-green: #25D366;
 }
 
 @layer base {

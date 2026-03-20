@@ -43,6 +43,9 @@ import {
   PlusCircle,
   MinusCircle,
   Maximize,
+  Square,
+  RotateCw,
+  Sparkles,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -88,6 +91,24 @@ const INSTALLATION_TYPES = [
     title: 'Uninstallation', 
     desc: 'Request for Uninstallation', 
     icon: <MinusCircle className="w-8 h-8" /> 
+  },
+];
+
+const WALL_MOUNT_TYPES = [
+  { 
+    title: 'Fixed Wall Mount', 
+    desc: 'Request for Fixed Wall Mount', 
+    icon: <Square className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Rotation Wall Mount', 
+    desc: 'Request for Rotation Wall Mount', 
+    icon: <RotateCw className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Special Wall Mount', 
+    desc: 'Request for Special Wall Mount', 
+    icon: <Sparkles className="w-8 h-8" /> 
   },
 ];
 
@@ -161,9 +182,18 @@ const SCREEN_ISSUES = [
   },
 ];
 
+const SCREEN_BRANDS = [
+  { name: 'BOE', desc: 'Replacement screens from BOE' },
+  { name: 'CSOT', desc: 'Replacement screens from CSOT' },
+  { name: 'LG', desc: 'Replacement screens from LG' },
+  { name: 'Samsung', desc: 'Replacement screens from Samsung' },
+  { name: 'CHOT', desc: 'Replacement screens from CHOT' },
+  { name: 'Innolux', desc: 'Replacement screens from Innolux' },
+];
+
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection'>('home');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection'>('home');
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
@@ -188,6 +218,14 @@ export default function App() {
     } else if (serviceName === 'Installation') {
       setSelectedService(serviceName);
       setView('installation-type');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (serviceName === 'Screen Replacement') {
+      setSelectedService(serviceName);
+      setView('screen-brands');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (serviceName === 'Wall Mount') {
+      setSelectedService(serviceName);
+      setView('wall-mount-selection');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -734,6 +772,119 @@ export default function App() {
                 ))}
               </div>
             </section>
+          </motion.main>
+        ) : view === 'wall-mount-selection' ? (
+          <motion.main 
+            key="wall-mount-selection"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('home')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Wall Mount Service</h1>
+                <p className="text-gray-500 font-medium">Select the type of wall mount you need</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {WALL_MOUNT_TYPES.map((type, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-6 sm:mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-110">
+                      {type.icon}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-lg sm:text-2xl font-bold tracking-tight mb-2">{type.title}</h3>
+                  <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                    {type.desc}
+                  </p>
+                  
+                  <a 
+                    href={`https://wa.me/919513134313?text=I%20want%20to%20consult%20about%20${encodeURIComponent(type.title)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                    Consult on WhatsApp
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </motion.main>
+        ) : view === 'screen-brands' ? (
+          <motion.main 
+            key="screen-brands"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('home')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Screen Replacement</h1>
+                <p className="text-gray-500 font-medium">Select your preferred panel brand</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {SCREEN_BRANDS.map((brand, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="flex flex-row sm:flex-col items-center gap-4 sm:gap-0 w-full sm:w-auto mb-4 sm:mb-8">
+                    <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center group-hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <Layers className="w-6 h-6 sm:w-10 sm:h-10 text-gray-400 group-hover:text-black transition-colors" />
+                    </div>
+                    <h3 className="text-sm sm:text-xl font-bold tracking-tight text-left sm:text-center">{brand.name}</h3>
+                  </div>
+                  
+                  <p className="hidden sm:block text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
+                    {brand.desc}
+                  </p>
+                  
+                  <div className="flex flex-col gap-2 sm:gap-3 w-full">
+                    <a 
+                      href={`https://wa.me/919513134313?text=I%20want%20to%20consult%20about%20${encodeURIComponent(brand.name)}%20screen%20replacement`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-[10px] sm:text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                    >
+                      <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 fill-[#25d366] text-[#25d366]" />
+                      WhatsApp
+                    </a>
+                    <a 
+                      href="tel:+919513134313"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-blue-50 text-blue-600 rounded-full text-[10px] sm:text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                    >
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                      Call Now
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.main>
         ) : view === 'diagnosis' ? (
           <motion.main 

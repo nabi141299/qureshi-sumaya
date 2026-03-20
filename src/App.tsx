@@ -39,7 +39,10 @@ import {
   X,
   Cable,
   Clock,
-  Navigation
+  Navigation,
+  PlusCircle,
+  MinusCircle,
+  Maximize,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -73,6 +76,28 @@ const LAPTOP_SERVICES = [
 
 const TABLET_SERVICES = [
   { name: 'Flex Bonding', icon: <Cable className="w-6 h-6" /> },
+];
+
+const INSTALLATION_TYPES = [
+  { 
+    title: 'Installation', 
+    desc: 'Request for Installation', 
+    icon: <PlusCircle className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Uninstallation', 
+    desc: 'Request for Uninstallation', 
+    icon: <MinusCircle className="w-8 h-8" /> 
+  },
+];
+
+const TV_SIZES = [
+  { label: 'Under 30"', value: 'under_30' },
+  { label: 'Under 50"', value: 'under_50' },
+  { label: '55"', value: '55' },
+  { label: '65"', value: '65' },
+  { label: '75"', value: '75' },
+  { label: 'Above 75"', value: 'above_75' },
 ];
 
 const DIAGNOSIS_ISSUES = [
@@ -138,8 +163,9 @@ const SCREEN_ISSUES = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue'>('home');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection'>('home');
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -158,6 +184,10 @@ export default function App() {
     } else if (serviceName === 'Screen Repair') {
       setSelectedService(serviceName);
       setView('screen-issue');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (serviceName === 'Installation') {
+      setSelectedService(serviceName);
+      setView('installation-type');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -470,7 +500,7 @@ export default function App() {
             exit={{ opacity: 0, y: -10 }}
             className="max-w-7xl mx-auto px-6 py-4 lg:py-8"
           >
-            <h1 className="text-[18px] sm:text-[22px] lg:text-[24px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-2xl leading-tight tracking-tight">
+            <h1 className="text-[16px] sm:text-[20px] lg:text-[22px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-md leading-tight tracking-tight">
               Expert TV Service: Precision Screen Repair & Panel Replacement
             </h1>
 
@@ -595,40 +625,40 @@ export default function App() {
               </div>
 
               {/* Right Column: Key Benefits & Trust */}
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
-                    <ShieldCheck className="w-6 h-6" />
+              <div className="lg:col-span-7 grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4 sm:mb-6">
+                    <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3">180 Days Warranty</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">180 Days Warranty</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-6">
-                    <Zap className="w-6 h-6" />
+                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 sm:mb-6">
+                    <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3">Same Day Repair</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Same Day Repair</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-6">
-                    <Truck className="w-6 h-6" />
+                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 mb-4 sm:mb-6">
+                    <Truck className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3">Free Pickup & Drop</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Free Pickup & Drop</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 mb-6">
-                    <Cpu className="w-6 h-6" />
+                <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 mb-4 sm:mb-6">
+                    <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3">Advanced Bonding</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3">Advanced Bonding</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">In-house state-of-the-art COF bonding machine for factory-quality panel repairs.</p>
                 </div>
 
-                <div className="sm:col-span-2 bg-black rounded-[2.5rem] p-10 text-white relative overflow-hidden">
+                <div className="col-span-2 bg-black rounded-[2.5rem] p-8 sm:p-10 text-white relative overflow-hidden">
                   <div className="relative z-10">
                     <h3 className="text-2xl font-bold mb-4">Need an Instant Quote?</h3>
                     <p className="text-gray-400 mb-8 max-w-md">Share your TV model and issue details on WhatsApp for a quick estimate from our experts.</p>
@@ -735,15 +765,137 @@ export default function App() {
                     {issue.desc}
                   </p>
                   
-                  <a 
-                    href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0]"
+                  <div className="flex flex-col gap-3 w-full">
+                    <a 
+                      href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      WhatsApp
+                    </a>
+                    <a 
+                      href="tel:+919513134313"
+                      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                    >
+                      <Phone className="w-4 h-4" />
+                      Call Now
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.main>
+        ) : view === 'installation-type' ? (
+          <motion.main 
+            key="installation-type"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            {/* Installation Type Header */}
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('home')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Installation Service</h1>
+                <p className="text-gray-500 font-medium">Select the type of service you need</p>
+              </div>
+            </div>
+
+            {/* Installation Type Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+              {INSTALLATION_TYPES.map((type, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-110">
+                      {type.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 tracking-tight">{type.title}</h3>
+                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[240px]">
+                    {type.desc}
+                  </p>
+                  
+                  <button 
+                    onClick={() => {
+                      setSelectedInstallationType(type.title);
+                      setView('tv-size-selection');
+                    }}
+                    className="flex items-center gap-3 px-8 py-4 bg-[#25d366] text-white rounded-2xl text-sm font-bold hover:bg-[#20ba56] transition-all shadow-lg shadow-[#25d366]/20"
                   >
-                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
-                    Consult on WhatsApp
-                  </a>
+                    <ArrowRight className="w-5 h-5" />
+                    Select Size
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+          </motion.main>
+        ) : view === 'tv-size-selection' ? (
+          <motion.main 
+            key="tv-size-selection"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            {/* TV Size Header */}
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('installation-type')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Select TV Size</h1>
+                <p className="text-gray-500 font-medium">Choose your TV size for {selectedInstallationType}</p>
+              </div>
+            </div>
+
+            {/* TV Size Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {TV_SIZES.map((size, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-110">
+                      <Maximize className="w-8 h-8" />
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-6 tracking-tight">{size.label}</h3>
+                  
+                  <div className="flex flex-col gap-3 w-full">
+                    <a 
+                      href={`https://wa.me/919513134313?text=I%20want%20to%20request%20${encodeURIComponent(selectedInstallationType || '')}%20service%20for%20a%20${encodeURIComponent(size.label)}%20TV`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      WhatsApp
+                    </a>
+                    <a 
+                      href="tel:+919513134313"
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                    >
+                      <Phone className="w-4 h-4" />
+                      Call Now
+                    </a>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -788,15 +940,24 @@ export default function App() {
                     {issue.desc}
                   </p>
                   
-                  <a 
-                    href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0]"
-                  >
-                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
-                    Consult on WhatsApp
-                  </a>
+                  <div className="flex flex-col gap-3 w-full">
+                    <a 
+                      href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0] w-full"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                      WhatsApp
+                    </a>
+                    <a 
+                      href="tel:+919513134313"
+                      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-100 transition-all border border-blue-100 w-full"
+                    >
+                      <Phone className="w-4 h-4" />
+                      Call Now
+                    </a>
+                  </div>
                 </motion.div>
               ))}
             </div>

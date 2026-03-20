@@ -3,430 +3,465 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
-  Search, 
+  Tv, 
+  Smartphone, 
+  Laptop, 
+  Tablet, 
+  Monitor, 
+  Layers, 
+  Settings, 
+  Hammer, 
   MapPin, 
-  ChevronRight, 
+  ChevronDown, 
   Star, 
-  ShieldCheck, 
-  Clock, 
-  CheckCircle2, 
-  Phone, 
+  ArrowRight,
   MessageCircle,
-  Tv,
-  Monitor,
-  Wrench,
+  Phone,
+  PlayCircle,
   ArrowLeft,
-  X
+  Zap,
+  Volume2,
+  HelpCircle,
+  MonitorPlay,
+  MonitorOff,
+  Sun,
+  AlignJustify,
+  Columns2,
+  Image as ImageIcon,
+  Copy,
+  AlertTriangle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
+const CATEGORIES = [
+  { id: 'tv', name: 'TV', icon: <Tv className="w-4 h-4" /> },
+  { id: 'mobile', name: 'Mobile', icon: <Smartphone className="w-4 h-4" /> },
+  { id: 'laptop', name: 'Laptop', icon: <Laptop className="w-4 h-4" /> },
+  { id: 'table', name: 'Table', icon: <Tablet className="w-4 h-4" /> },
+];
+
 const TV_SERVICES = [
-  { id: 'led', name: 'LED TV Repair', icon: <Monitor className="w-8 h-8 text-slate-700" />, color: 'bg-slate-50' },
-  { id: 'lcd', name: 'LCD TV Repair', icon: <Tv className="w-8 h-8 text-slate-700" />, color: 'bg-slate-50' },
-  { id: 'qled', name: 'QLED Specialist', icon: <Monitor className="w-8 h-8 text-uc-navy" />, color: 'bg-blue-50' },
-  { id: 'oled', name: 'OLED Screen Care', icon: <Tv className="w-8 h-8 text-indigo-600" />, color: 'bg-indigo-50' },
+  { name: 'LED TV Repair', icon: <Tv className="w-6 h-6" /> },
+  { name: 'LCD TV Repair', icon: <Monitor className="w-6 h-6" /> },
+  { name: 'QLED TV Repair', icon: <Tv className="w-6 h-6" /> },
+  { name: 'OLED TV Repair', icon: <Tv className="w-6 h-6" /> },
+  { name: 'Screen Repair', icon: <PlayCircle className="w-6 h-6" /> },
+  { name: 'Screen Replacement', icon: <Layers className="w-6 h-6" /> },
+  { name: 'Installation', icon: <Settings className="w-6 h-6" /> },
+  { name: 'Wall Mount', icon: <Hammer className="w-6 h-6" /> },
 ];
 
-const ISSUES = [
-  { id: 'power', name: 'No Power' },
-  { id: 'sound', name: 'Sound Issue' },
-  { id: 'display', name: 'Display Crack' },
-  { id: 'lines', name: 'Lines on Screen' },
-  { id: 'flicker', name: 'Flickering' },
-  { id: 'other', name: 'Other Issues' },
+const DIAGNOSIS_ISSUES = [
+  { 
+    title: 'Power Issues', 
+    desc: 'Select this if you are facing power issues', 
+    icon: <Zap className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Sound Issues', 
+    desc: 'Select this if you are facing sound issues', 
+    icon: <Volume2 className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Display Issues', 
+    desc: 'Select this if you are facing display issues', 
+    icon: <MonitorPlay className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Not Sure', 
+    desc: 'Select this if you are facing not sure', 
+    icon: <HelpCircle className="w-8 h-8" /> 
+  },
 ];
 
-const LOCATIONS = [
-  'Doddanakundi',
-  'Gururaja Layout',
-  'Whitefield',
-  'Marathahalli',
-  'Indiranagar',
-  'Koramangala',
-  'HSR Layout',
-  'Other Bangalore Location'
+const SCREEN_ISSUES = [
+  { 
+    title: 'Blank Screen', 
+    desc: 'My screen has blank screen', 
+    icon: <MonitorOff className="w-8 h-8" /> 
+  },
+  { 
+    title: 'White Screen', 
+    desc: 'My screen has white screen', 
+    icon: <Sun className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Horizontal Lines', 
+    desc: 'My screen has horizontal lines', 
+    icon: <AlignJustify className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Vertical Lines/Bars', 
+    desc: 'My screen has vertical lines/bars', 
+    icon: <Columns2 className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Negative Image', 
+    desc: 'My screen has negative image', 
+    icon: <ImageIcon className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Double Image', 
+    desc: 'My screen has double image', 
+    icon: <Copy className="w-8 h-8" /> 
+  },
+  { 
+    title: 'Physical Damage', 
+    desc: 'My screen has physical damage', 
+    icon: <AlertTriangle className="w-8 h-8" /> 
+  },
 ];
 
 export default function App() {
-  const [step, setStep] = useState(1);
-  const [booking, setBooking] = useState({
-    type: '',
-    issue: '',
-    location: ''
-  });
-  const [showBooking, setShowBooking] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('tv');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue'>('home');
+  const [selectedService, setSelectedService] = useState<string | null>(null);
 
-  const phoneNumber = "9513134313";
-  const whatsappLink = `https://wa.me/91${phoneNumber}`;
-
-  const handleNext = (field: string, value: string) => {
-    setBooking(prev => ({ ...prev, [field]: value }));
-    setStep(prev => prev + 1);
-  };
-
-  const resetBooking = () => {
-    setStep(1);
-    setBooking({ type: '', issue: '', location: '' });
-    setShowBooking(false);
+  const handleServiceClick = (serviceName: string) => {
+    const diagnosisServices = ['LED TV Repair', 'LCD TV Repair', 'QLED TV Repair', 'OLED TV Repair'];
+    if (diagnosisServices.includes(serviceName)) {
+      setSelectedService(serviceName);
+      setView('diagnosis');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (serviceName === 'Screen Repair') {
+      setSelectedService(serviceName);
+      setView('screen-issue');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
+    <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-uc-navy rounded flex items-center justify-center">
-                <Tv className="text-white w-5 h-5" />
-              </div>
-              <span className="text-lg font-bold tracking-tight text-uc-navy">iPixel <span className="text-slate-400 font-medium">Electronics</span></span>
-            </div>
-            <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
-              <MapPin className="w-4 h-4 text-uc-navy" />
-              <span>Bangalore</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <a href={`tel:${phoneNumber}`} className="hidden sm:flex items-center gap-2 text-sm font-semibold text-uc-navy">
-              <Phone className="w-4 h-4" />
-              {phoneNumber}
-            </a>
-            <button 
-              onClick={() => setShowBooking(true)}
-              className="bg-uc-navy text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-uc-navy/10 hover:bg-uc-navy/90 transition-all"
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-16">
+            {/* Logo */}
+            <div 
+              className="flex items-center gap-3 cursor-pointer" 
+              onClick={() => setView('home')}
             >
-              Book Now
-            </button>
+              <div className="grid grid-cols-2 gap-0.5 w-9 h-9">
+                <div className="bg-[#ff4d4d] rounded-[3px]"></div>
+                <div className="bg-[#4caf50] rounded-[3px]"></div>
+                <div className="bg-[#2196f3] rounded-[3px]"></div>
+                <div className="bg-[#ffeb3b] rounded-[3px]"></div>
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-xl font-bold tracking-tight">iPixel</span>
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-400">Electronics</span>
+              </div>
+            </div>
+
+            {/* Nav */}
+            <nav className="hidden md:flex items-center gap-10">
+              <button className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors">
+                Services <ChevronDown className="w-4 h-4 opacity-50" />
+              </button>
+              <button className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors">
+                Support <ChevronDown className="w-4 h-4 opacity-50" />
+              </button>
+            </nav>
           </div>
+
+          {/* Right side */}
+          <button className="flex items-center gap-2.5 px-5 py-2.5 bg-[#f8f9fa] border border-gray-100 rounded-xl text-[14px] font-bold text-gray-600 hover:bg-gray-100 transition-all">
+            <MapPin className="w-4 h-4 text-gray-400" />
+            Select Location
+            <ChevronDown className="w-4 h-4 opacity-50" />
+          </button>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative py-16 lg:py-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+      <AnimatePresence mode="wait">
+        {view === 'home' ? (
+          <motion.main 
+            key="home"
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
+            exit={{ opacity: 0, y: -10 }}
+            className="max-w-7xl mx-auto px-6 py-16"
           >
-            <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-              Professional TV Repair <br />
-              <span className="text-uc-navy">at Home in 60 Minutes.</span>
+            <h1 className="text-[44px] lg:text-[56px] font-bold mb-16 max-w-4xl leading-[1.1] tracking-tight">
+              Expert TV Service: Precision Screen Repair & Panel Replacement
             </h1>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-10">
-              Trusted by thousands in Doddanakundi. Specialized service for LED, LCD, QLED, and OLED TVs.
-            </p>
 
-            {/* Search Bar */}
-            <div className="relative max-w-2xl mx-auto">
-              <div className="flex items-center bg-white border-2 border-slate-100 rounded-2xl p-2 shadow-xl shadow-slate-200/50 focus-within:border-uc-navy transition-all">
-                <Search className="w-6 h-6 text-slate-400 ml-4" />
-                <input 
-                  type="text" 
-                  placeholder="Search for TV Repair (LED, LCD, QLED, OLED)" 
-                  className="flex-1 px-4 py-3 outline-none text-lg placeholder:text-slate-400"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button 
-                  onClick={() => setShowBooking(true)}
-                  className="hidden sm:block bg-uc-navy text-white px-8 py-3 rounded-xl font-bold"
-                >
-                  Search
-                </button>
-              </div>
-              <div className="mt-4 flex items-center justify-center gap-6 text-sm font-medium text-slate-400">
-                <div className="flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-slate-900">4.8/5</span> Average Rating
-                </div>
-                <div className="w-1 h-1 bg-slate-200 rounded-full" />
-                <div>500+ Repairs Completed this month</div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Hero Image / Illustration */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="relative w-full max-w-4xl aspect-[21/9] rounded-3xl overflow-hidden bg-slate-100 border border-slate-200"
-          >
-            <img 
-              src="https://picsum.photos/seed/technician/1200/600" 
-              alt="Professional Technician" 
-              className="w-full h-full object-cover opacity-80"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Service Selection Grid */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Our Specialized Services</h2>
-            <p className="text-slate-500">Select your TV technology for expert care</p>
-          </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {TV_SERVICES.map((service) => (
-              <motion.button
-                key={service.id}
-                whileHover={{ y: -4 }}
-                onClick={() => {
-                  setBooking(prev => ({ ...prev, type: service.id }));
-                  setStep(2);
-                  setShowBooking(true);
-                }}
-                className="flex flex-col items-center p-6 sm:p-8 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
-              >
-                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl ${service.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  {service.icon}
-                </div>
-                <span className="font-bold text-slate-900">{service.name}</span>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6">
-                <ShieldCheck className="w-8 h-8 text-uc-navy" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Professional Technicians</h3>
-              <p className="text-slate-500">Every technician is background-verified and expert-trained.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
-                <Wrench className="w-8 h-8 text-uc-green" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Transparent Pricing</h3>
-              <p className="text-slate-500">Upfront quotes with no hidden charges. Pay only for what you see.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-6">
-                <Clock className="w-8 h-8 text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">90-Day Warranty</h3>
-              <p className="text-slate-500">We stand by our work. All repairs come with a 90-day service guarantee.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Location Banner */}
-      <section className="bg-uc-navy py-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-white text-xl sm:text-2xl font-bold mb-4">
-            Serving: Doddanakundi, Gururaja Layout, and all of Bangalore.
-          </h2>
-          <p className="text-blue-200">Get your TV fixed today by the best in the city.</p>
-        </div>
-      </section>
-
-      {/* Floating WhatsApp */}
-      <a 
-        href={whatsappLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-uc-green text-white p-4 rounded-full shadow-2xl shadow-uc-green/40 hover:scale-110 transition-transform flex items-center gap-2 group"
-      >
-        <MessageCircle className="w-6 h-6" />
-        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-bold">WhatsApp Us</span>
-      </a>
-
-      {/* Booking Modal */}
-      <AnimatePresence>
-        {showBooking && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={resetBooking}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden"
-            >
-              {/* Modal Header */}
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {step > 1 && (
-                    <button onClick={() => setStep(step - 1)} className="p-1 hover:bg-slate-100 rounded-lg">
-                      <ArrowLeft className="w-5 h-5 text-slate-500" />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+              {/* Left Column: Service Selector */}
+              <div className="lg:col-span-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100 p-10">
+                <h2 className="text-2xl font-bold mb-8 tracking-tight">What are you looking for?</h2>
+                
+                {/* Category Tabs */}
+                <div className="flex gap-3 mb-12">
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-[14px] font-bold transition-all duration-300 ${
+                        activeCategory === cat.id
+                          ? 'bg-black text-white shadow-xl shadow-black/20 scale-[1.02]'
+                          : 'bg-white text-gray-400 border border-gray-100 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span className={activeCategory === cat.id ? 'text-white' : 'text-gray-300'}>
+                        {cat.icon}
+                      </span>
+                      {cat.name}
                     </button>
-                  )}
-                  <h3 className="font-bold text-lg">Book TV Service</h3>
-                </div>
-                <button onClick={resetBooking} className="p-1 hover:bg-slate-100 rounded-lg">
-                  <X className="w-5 h-5 text-slate-500" />
-                </button>
-              </div>
-
-              {/* Modal Content */}
-              <div className="p-6">
-                {/* Progress Bar */}
-                <div className="flex gap-2 mb-8">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? 'bg-uc-navy' : 'bg-slate-100'}`} />
                   ))}
                 </div>
 
-                {step === 1 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h4 className="text-xl font-bold mb-6">What type of TV do you have?</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      {TV_SERVICES.map((s) => (
-                        <button 
-                          key={s.id}
-                          onClick={() => handleNext('type', s.name)}
-                          className="p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left"
-                        >
-                          <div className="mb-2">{s.icon}</div>
-                          <span className="font-bold text-sm">{s.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
+                {/* Service Grid */}
+                <div className="grid grid-cols-3 gap-y-12 gap-x-4 mb-14">
+                  {TV_SERVICES.map((service, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => handleServiceClick(service.name)}
+                      className="flex flex-col items-center text-center group transition-transform active:scale-95"
+                    >
+                      <div className="w-14 h-14 rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-all duration-300">
+                        <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300">
+                          {service.icon}
+                        </div>
+                      </div>
+                      <span className="text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
+                        {service.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
 
-                {step === 2 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h4 className="text-xl font-bold mb-6">What is the issue?</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {ISSUES.map((i) => (
-                        <button 
-                          key={i.id}
-                          onClick={() => handleNext('issue', i.name)}
-                          className="p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left font-semibold text-sm"
-                        >
-                          {i.name}
-                        </button>
-                      ))}
+                {/* Footer Search */}
+                <div className="pt-10 border-t border-gray-50">
+                  <p className="text-[15px] font-bold text-gray-900 mb-5">Can't find what you need?</p>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        placeholder="Type your issue..."
+                        className="w-full px-5 py-4 bg-[#f8f9fa] border border-gray-100 rounded-2xl text-[14px] font-medium outline-none focus:bg-white focus:border-gray-200 focus:ring-4 focus:ring-gray-50 transition-all"
+                      />
                     </div>
-                  </motion.div>
-                )}
-
-                {step === 3 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h4 className="text-xl font-bold mb-6">Select your location in Bangalore</h4>
-                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                      {LOCATIONS.map((l) => (
-                        <button 
-                          key={l}
-                          onClick={() => handleNext('location', l)}
-                          className="w-full p-4 border border-slate-100 rounded-xl hover:border-uc-navy hover:bg-slate-50 transition-all text-left font-semibold flex items-center justify-between group"
-                        >
-                          {l}
-                          <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-uc-navy" />
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                {step === 4 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-center">
-                    <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-10 h-10 text-uc-green" />
-                    </div>
-                    <h4 className="text-2xl font-bold mb-2">Almost there!</h4>
-                    <p className="text-slate-500 mb-8">
-                      You've selected a <span className="text-slate-900 font-bold">{booking.type}</span> repair for <span className="text-slate-900 font-bold">{booking.issue}</span> in <span className="text-slate-900 font-bold">{booking.location}</span>.
-                    </p>
-                    <div className="space-y-3">
-                      <a 
-                        href={`tel:${phoneNumber}`}
-                        className="block w-full bg-uc-navy text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-uc-navy/20"
-                      >
-                        Call to Confirm
-                      </a>
-                      <a 
-                        href={whatsappLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full bg-uc-green text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-uc-green/20"
-                      >
-                        Confirm on WhatsApp
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
+                    <button className="w-14 h-14 bg-[#25d366] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-[#25d366]/30 hover:scale-110 active:scale-95 transition-all">
+                      <MessageCircle className="w-7 h-7 fill-current" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          </div>
+
+              {/* Right Column: Feature Display */}
+              <div className="lg:col-span-8 relative rounded-[3rem] overflow-hidden group shadow-2xl shadow-black/5">
+                <img
+                  src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1200"
+                  alt="Advanced Bonding Technology"
+                  className="w-full h-full object-cover min-h-[600px] group-hover:scale-105 transition-transform duration-1000"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                
+                <div className="absolute bottom-16 left-16 right-16 text-white">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <h3 className="text-4xl font-bold mb-6 tracking-tight">Advanced Bonding Technology</h3>
+                    <p className="text-gray-300 max-w-xl text-lg leading-relaxed font-medium opacity-90">
+                      Our in-house state-of-the-art bonding machine ensures factory-quality display repairs and panel replacements.
+                    </p>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+
+            {/* Trust Section */}
+            <div className="mt-20 flex items-center gap-5">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+                <Star className="w-6 h-6 text-black fill-current" />
+              </div>
+              <div>
+                <div className="text-2xl font-black leading-none tracking-tight">5.0</div>
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mt-1">Service Rating</div>
+              </div>
+            </div>
+
+            {/* Why Choose Section */}
+            <div className="mt-12 max-w-2xl">
+              <h2 className="text-2xl font-bold mb-4 tracking-tight">Why Choose iPixel Electronics?</h2>
+              <p className="text-gray-500 text-[15px] leading-relaxed font-medium">
+                At iPixel, we provide reliable solutions backed by a warranty of up to 180 days. By utilizing our in-house bonding machine, we eliminate the middleman—allowing us to deliver high-quality results at an affordable price.
+              </p>
+            </div>
+
+            {/* Offers Section */}
+            <section className="mt-32">
+              <div className="flex items-center justify-between mb-12">
+                <h2 className="text-3xl font-bold tracking-tight">Offers & discounts</h2>
+                <button className="flex items-center gap-2.5 text-[15px] font-bold text-gray-900 hover:gap-4 transition-all group">
+                  View All <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[
+                  { color: 'bg-blue-50', text: 'Flat 20% Off on Screen Replacement' },
+                  { color: 'bg-green-50', text: 'Free Pickup & Delivery in Bangalore' },
+                  { color: 'bg-purple-50', text: '90 Days Warranty on All Repairs' }
+                ].map((offer, i) => (
+                  <motion.div 
+                    key={i} 
+                    whileHover={{ y: -10 }}
+                    className={`${offer.color} h-56 rounded-[2.5rem] p-10 flex flex-col justify-end border border-white/50 shadow-sm transition-all cursor-pointer`}
+                  >
+                    <div className="w-10 h-10 bg-white rounded-xl mb-4 flex items-center justify-center shadow-sm">
+                      <Star className="w-5 h-5 text-black" />
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-800 leading-tight">{offer.text}</h4>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          </motion.main>
+        ) : view === 'diagnosis' ? (
+          <motion.main 
+            key="diagnosis"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            {/* Diagnosis Header */}
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('home')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Diagnosis</h1>
+                <p className="text-gray-500 font-medium">Select the issue for your {selectedService}</p>
+              </div>
+            </div>
+
+            {/* Diagnosis Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {DIAGNOSIS_ISSUES.map((issue, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-110">
+                      {issue.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 tracking-tight">{issue.title}</h3>
+                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
+                    {issue.desc}
+                  </p>
+                  
+                  <a 
+                    href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0]"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                    Consult on WhatsApp
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </motion.main>
+        ) : (
+          <motion.main 
+            key="screen-issue"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-7xl mx-auto px-6 py-16"
+          >
+            {/* Screen Issue Header */}
+            <div className="flex items-start gap-6 mb-12">
+              <button 
+                onClick={() => setView('home')}
+                className="p-3 hover:bg-gray-100 rounded-full transition-colors mt-1"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">Screen Issue</h1>
+                <p className="text-gray-500 font-medium">Select the specific issue with your screen</p>
+              </div>
+            </div>
+
+            {/* Screen Issue Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {SCREEN_ISSUES.map((issue, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -8 }}
+                  className="bg-white rounded-[2rem] p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] flex flex-col items-center text-center group transition-all"
+                >
+                  <div className="w-20 h-20 rounded-full bg-[#f8f9fa] flex items-center justify-center mb-8 group-hover:bg-gray-100 transition-colors">
+                    <div className="text-gray-800 scale-110">
+                      {issue.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 tracking-tight">{issue.title}</h3>
+                  <p className="text-gray-400 text-sm font-medium mb-10 leading-relaxed max-w-[200px]">
+                    {issue.desc}
+                  </p>
+                  
+                  <a 
+                    href={`https://wa.me/919513134313?text=I%20am%20facing%20${encodeURIComponent(issue.title)}%20with%20my%20${encodeURIComponent(selectedService || 'TV')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-6 py-3 bg-[#f0fff4] text-[#16a34a] rounded-full text-sm font-bold hover:bg-[#dcfce7] transition-all border border-[#bbf7d0]"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-[#25d366] text-[#25d366]" />
+                    Consult on WhatsApp
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </motion.main>
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                  <Tv className="text-uc-navy w-5 h-5" />
-                </div>
-                <span className="text-xl font-bold tracking-tight">iPixel Electronics</span>
-              </div>
-              <p className="text-slate-400 mb-6">
-                Professional TV repair services at your doorstep. Quality service, transparent pricing, and expert care.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-6">Service Areas</h4>
-              <ul className="space-y-3 text-slate-400">
-                <li>Doddanakundi</li>
-                <li>Gururaja Layout</li>
-                <li>Whitefield</li>
-                <li>Marathahalli</li>
-                <li>Indiranagar</li>
-              </ul>
-            </div>
+      {/* Footer Space */}
+      <div className="h-20" />
 
-            <div>
-              <h4 className="font-bold mb-6">Contact Us</h4>
-              <ul className="space-y-4 text-slate-400">
-                <li className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-uc-green" />
-                  {phoneNumber}
-                </li>
-                <li className="flex items-center gap-3">
-                  <MapPin className="w-5 h-5 text-uc-green" />
-                  Bangalore, Karnataka
-                </li>
-                <li className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-uc-green" />
-                  Mon - Sat: 10 AM - 8 PM
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
-            <p>© 2026 iPixel Electronics. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Floating Buttons */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
+        {/* Call Button */}
+        <motion.a
+          href="tel:+919513134313"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-900 transition-colors"
+          title="Call Us"
+        >
+          <Phone className="w-6 h-6" />
+        </motion.a>
+
+        {/* WhatsApp Button */}
+        <motion.a
+          href="https://wa.me/919513134313"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#20ba56] transition-colors"
+          title="WhatsApp Us"
+        >
+          <MessageCircle className="w-7 h-7 fill-white text-[#25D366]" />
+        </motion.a>
+      </div>
     </div>
   );
 }

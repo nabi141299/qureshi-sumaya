@@ -46,6 +46,8 @@ import {
   Square,
   RotateCw,
   Sparkles,
+  Calendar,
+  Check,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -193,13 +195,50 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection'>('home');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking'>('home');
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedService, setExpandedService] = useState<string | null>(null);
+
+  // Appointment states
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+
+  const getNextThreeDays = () => {
+    const days = [];
+    for (let i = 0; i < 3; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      days.push({
+        fullDate: date.toISOString().split('T')[0],
+        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dateNum: date.getDate(),
+        month: date.toLocaleDateString('en-US', { month: 'short' }),
+      });
+    }
+    return days;
+  };
+
+  const timeSlots = [
+    '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', 
+    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'
+  ];
+
+  const handleShareWhatsApp = () => {
+    const message = `*New Appointment Request*%0A%0A*Name:* ${userName}%0A*Phone:* ${userPhone}%0A*Service:* ${selectedService || 'General Repair'}%0A*Date:* ${selectedDate}%0A*Time:* ${selectedTime}`;
+    window.open(`https://wa.me/919513134313?text=${message}`, '_blank');
+  };
+
+  const handleShareEmail = () => {
+    const subject = `New Appointment Request - ${userName}`;
+    const body = `New Appointment Request\n\nName: ${userName}\nPhone: ${userPhone}\nService: ${selectedService || 'General Repair'}\nDate: ${selectedDate}\nTime: ${selectedTime}`;
+    window.open(`mailto:help@ipixelelectronics.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  };
 
   const handleServiceClick = (serviceName: string) => {
     if (serviceName === 'Flex Bonding') {
@@ -249,7 +288,7 @@ export default function App() {
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-xl font-bold tracking-tight">iPixel</span>
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-400">Electronics</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black">Electronics</span>
               </div>
             </div>
 
@@ -479,6 +518,18 @@ export default function App() {
                         <div className="text-xs text-gray-400">Installation services</div>
                       </div>
                     </button>
+                    <button 
+                      onClick={() => { setView('appointment-booking'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-black text-white rounded-2xl text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Book Appointment</div>
+                        <div className="text-xs text-white/60">Schedule a visit</div>
+                      </div>
+                    </button>
                   </div>
                 </div>
 
@@ -643,6 +694,15 @@ export default function App() {
                     </div>
                   ))}
                 </div>
+
+                {/* Book Appointment Button */}
+                <button 
+                  onClick={() => setView('appointment-booking')}
+                  className="w-full py-4 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-gray-800 transition-all shadow-lg shadow-black/10 mb-8"
+                >
+                  <Calendar className="w-5 h-5" />
+                  Book Appointment
+                </button>
 
                 {/* Footer Search */}
                 <div className="pt-6 border-t border-gray-50">
@@ -1066,6 +1126,112 @@ export default function App() {
               ))}
             </div>
           </motion.main>
+        ) : view === 'appointment-booking' ? (
+          <motion.main 
+            key="appointment-booking"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-3xl mx-auto px-6 py-12"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <button 
+                onClick={() => setView('home')}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <h1 className="text-3xl font-bold tracking-tight">Book Appointment</h1>
+            </div>
+
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+              {/* Date Selection */}
+              <div className="mb-8">
+                <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 block">Select Date (Next 3 Days)</label>
+                <div className="grid grid-cols-3 gap-4">
+                  {getNextThreeDays().map((day) => (
+                    <button
+                      key={day.fullDate}
+                      onClick={() => setSelectedDate(day.fullDate)}
+                      className={`flex flex-col items-center p-4 rounded-2xl border-2 transition-all ${
+                        selectedDate === day.fullDate 
+                          ? 'border-black bg-black text-white' 
+                          : 'border-gray-100 hover:border-gray-200 text-gray-600'
+                      }`}
+                    >
+                      <span className="text-xs font-bold uppercase mb-1">{day.dayName}</span>
+                      <span className="text-2xl font-bold">{day.dateNum}</span>
+                      <span className="text-xs font-medium opacity-60">{day.month}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Time Selection */}
+              <div className="mb-8">
+                <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 block">Select Time Slot</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {timeSlots.map((time) => (
+                    <button
+                      key={time}
+                      onClick={() => setSelectedTime(time)}
+                      className={`py-3 rounded-xl border-2 text-sm font-bold transition-all ${
+                        selectedTime === time 
+                          ? 'border-black bg-black text-white' 
+                          : 'border-gray-100 hover:border-gray-200 text-gray-600'
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="space-y-4 mb-8">
+                <div>
+                  <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Your Name</label>
+                  <input 
+                    type="text" 
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white outline-none transition-all font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    value={userPhone}
+                    onChange={(e) => setUserPhone(e.target.value)}
+                    placeholder="Enter your phone number"
+                    className="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white outline-none transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* Share Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button 
+                  onClick={handleShareWhatsApp}
+                  disabled={!selectedDate || !selectedTime || !userName || !userPhone}
+                  className="flex items-center justify-center gap-3 py-4 bg-[#25d366] text-white rounded-2xl font-bold hover:bg-[#22c35e] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-500/20"
+                >
+                  <MessageCircle className="w-5 h-5 fill-white" />
+                  Share on WhatsApp
+                </button>
+                <button 
+                  onClick={handleShareEmail}
+                  disabled={!selectedDate || !selectedTime || !userName || !userPhone}
+                  className="flex items-center justify-center gap-3 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
+                >
+                  <HelpCircle className="w-5 h-5" />
+                  Share via Email
+                </button>
+              </div>
+            </div>
+          </motion.main>
         ) : (
           <motion.main 
             key="screen-issue"
@@ -1148,7 +1314,7 @@ export default function App() {
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="text-lg font-bold tracking-tight">iPixel</span>
-                  <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-gray-400">Electronics</span>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-black">Electronics</span>
                 </div>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed max-w-sm">

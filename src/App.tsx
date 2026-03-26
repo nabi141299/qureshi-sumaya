@@ -195,7 +195,7 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking'>('home');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote'>('home');
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
@@ -208,6 +208,11 @@ export default function App() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
+
+  // Instant Quote states
+  const [quoteModel, setQuoteModel] = useState('');
+  const [quoteIssue, setQuoteIssue] = useState('');
+  const [quoteFiles, setQuoteFiles] = useState<{ images: File[], videos: File[] }>({ images: [], videos: [] });
 
   const getNextThreeDays = () => {
     const days = [];
@@ -238,6 +243,20 @@ export default function App() {
     const subject = `New Appointment Request - ${userName}`;
     const body = `New Appointment Request\n\nName: ${userName}\nPhone: ${userPhone}\nService: ${selectedService || 'General Repair'}\nDate: ${selectedDate}\nTime: ${selectedTime}`;
     window.open(`mailto:help@ipixelelectronics.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  };
+
+  const handleQuoteWhatsApp = () => {
+    let message = `*Instant Quote Request*%0A%0A`;
+    if (quoteModel) message += `*TV Model:* ${quoteModel}%0A`;
+    if (quoteIssue) message += `*Issue Details:* ${quoteIssue}%0A`;
+    
+    const fileCount = quoteFiles.images.length + quoteFiles.videos.length;
+    if (fileCount > 0) {
+      message += `%0A_I have ${quoteFiles.images.length} images and ${quoteFiles.videos.length} videos ready to share._%0A`;
+    }
+    
+    message += `%0A_Please let me know the estimate._`;
+    window.open(`https://wa.me/919513134313?text=${message}`, '_blank');
   };
 
   const handleServiceClick = (serviceName: string) => {
@@ -729,7 +748,7 @@ export default function App() {
                     <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
                       <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">180 Days Warranty</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Upto 180 Days Warranty</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
                 </div>
@@ -739,7 +758,7 @@ export default function App() {
                     <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
                       <Zap className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Same Day Repair</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Fast and Reliable Repair</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Most screen and panel issues resolved within 24 hours at our advanced service center.</p>
                 </div>
@@ -768,15 +787,13 @@ export default function App() {
                   <div className="relative z-10">
                     <h3 className="text-2xl font-bold mb-4">Need an Instant Quote?</h3>
                     <p className="text-gray-400 mb-8 max-w-md">Share your TV model and issue details on WhatsApp for a quick estimate from our experts.</p>
-                    <a 
-                      href="https://wa.me/919876543210" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={() => setView('instant-quote')}
                       className="inline-flex items-center gap-3 px-8 py-4 bg-[#25d366] text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all"
                     >
                       <MessageCircle className="w-6 h-6 fill-current" />
                       Chat on WhatsApp
-                    </a>
+                    </button>
                   </div>
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
                 </div>
@@ -1124,6 +1141,111 @@ export default function App() {
                   </div>
                 </motion.div>
               ))}
+            </div>
+          </motion.main>
+        ) : view === 'instant-quote' ? (
+          <motion.main 
+            key="instant-quote"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="max-w-2xl mx-auto px-6 py-12"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <button 
+                onClick={() => setView('home')}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <h1 className="text-3xl font-bold tracking-tight">Instant Quote</h1>
+            </div>
+
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+              <div className="space-y-6 mb-8">
+                <div>
+                  <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">TV Model Number (Optional)</label>
+                  <input 
+                    type="text" 
+                    value={quoteModel}
+                    onChange={(e) => setQuoteModel(e.target.value)}
+                    placeholder="e.g. Samsung UA55TU8000"
+                    className="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white outline-none transition-all font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Issue Details (Optional)</label>
+                  <textarea 
+                    value={quoteIssue}
+                    onChange={(e) => setQuoteIssue(e.target.value)}
+                    placeholder="Describe the problem (e.g. horizontal lines, no display, sound but no picture)"
+                    rows={4}
+                    className="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white outline-none transition-all font-medium resize-none"
+                  />
+                </div>
+
+                {/* File Upload Options */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Add Pictures</label>
+                    <label className="flex flex-col items-center justify-center w-full h-32 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-black hover:bg-white transition-all cursor-pointer group">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-black mb-2" />
+                        <p className="text-xs font-bold text-gray-400 group-hover:text-black">
+                          {quoteFiles.images.length > 0 ? `${quoteFiles.images.length} Selected` : 'Upload Images'}
+                        </p>
+                      </div>
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        accept="image/*" 
+                        multiple 
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            setQuoteFiles(prev => ({ ...prev, images: Array.from(e.target.files!) }));
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Attach Video</label>
+                    <label className="flex flex-col items-center justify-center w-full h-32 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-black hover:bg-white transition-all cursor-pointer group">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <PlayCircle className="w-8 h-8 text-gray-400 group-hover:text-black mb-2" />
+                        <p className="text-xs font-bold text-gray-400 group-hover:text-black">
+                          {quoteFiles.videos.length > 0 ? `${quoteFiles.videos.length} Selected` : 'Upload Video'}
+                        </p>
+                      </div>
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        accept="video/*" 
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            setQuoteFiles(prev => ({ ...prev, videos: Array.from(e.target.files!) }));
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-4">
+                  <HelpCircle className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                  <p className="text-sm text-blue-800 font-medium">
+                    You can proceed even if some fields are empty. We'll help you on WhatsApp!
+                  </p>
+                </div>
+              </div>
+
+              <button 
+                onClick={handleQuoteWhatsApp}
+                className="w-full flex items-center justify-center gap-3 py-4 bg-[#25d366] text-white rounded-2xl font-bold hover:bg-[#22c35e] transition-all shadow-lg shadow-green-500/20"
+              >
+                <MessageCircle className="w-6 h-6 fill-white" />
+                Proceed to WhatsApp
+              </button>
             </div>
           </motion.main>
         ) : view === 'appointment-booking' ? (

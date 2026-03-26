@@ -231,8 +231,27 @@ export default function App() {
 
   const timeSlots = [
     '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', 
-    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'
+    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM',
+    '07:00 PM', '08:00 PM'
   ];
+
+  const isTimeSlotAvailable = (dateStr: string | null, timeStr: string) => {
+    if (!dateStr) return true;
+    
+    const now = new Date();
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    
+    if (period === 'PM' && hours !== 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    
+    const slotDate = new Date(dateStr);
+    slotDate.setHours(hours, minutes, 0, 0);
+    
+    // Check if slot is at least 3 hours in the future
+    const threeHoursFromNow = new Date(now.getTime() + (3 * 60 * 60 * 1000));
+    return slotDate > threeHoursFromNow;
+  };
 
   const handleShareWhatsApp = () => {
     const message = `*New Appointment Request*%0A%0A*Name:* ${userName}%0A*Phone:* ${userPhone}%0A*Service:* ${selectedService || 'General Repair'}%0A*Date:* ${selectedDate}%0A*Time:* ${selectedTime}`;
@@ -830,8 +849,8 @@ export default function App() {
               
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
                 {[
-                  { color: 'bg-blue-50', text: 'upto 10% Off on Screen Replacement' },
-                  { color: 'bg-green-50', text: 'Free Pickup & Delivery in Bangalore' },
+                  { color: 'bg-blue-50', text: 'Enjoy 10% to 20% off screen replacements when you bring your TV directly to our service center!' },
+                  { color: 'bg-green-50', text: 'Pickup and delivery available within our service area.' },
                   { color: 'bg-purple-50', text: 'Up to 180 days warranty on all repairs' }
                 ].map((offer, i) => (
                   <motion.div 
@@ -1293,19 +1312,25 @@ export default function App() {
               <div className="mb-8">
                 <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 block">Select Time Slot</label>
                 <div className="grid grid-cols-3 gap-3">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-3 rounded-xl border-2 text-sm font-bold transition-all ${
-                        selectedTime === time 
-                          ? 'border-black bg-black text-white' 
-                          : 'border-gray-100 hover:border-gray-200 text-gray-600'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                  {timeSlots.map((time) => {
+                    const isAvailable = isTimeSlotAvailable(selectedDate, time);
+                    return (
+                      <button
+                        key={time}
+                        disabled={!isAvailable}
+                        onClick={() => setSelectedTime(time)}
+                        className={`py-3 rounded-xl border-2 text-sm font-bold transition-all ${
+                          !isAvailable
+                            ? 'border-gray-50 bg-gray-50 text-gray-300 cursor-not-allowed'
+                            : selectedTime === time 
+                              ? 'border-black bg-black text-white' 
+                              : 'border-gray-100 hover:border-gray-200 text-gray-600'
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

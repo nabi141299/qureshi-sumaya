@@ -279,7 +279,7 @@ export default function App() {
                         className="absolute top-full left-0 mt-2 w-[320px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 py-4 z-20"
                       >
                         <button 
-                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          onClick={() => { handleServiceClick('LED TV Repair'); setIsServicesOpen(false); }}
                           className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
                         >
                           <div className="w-12 h-12 rounded-2xl bg-[#eef4ff] flex items-center justify-center shrink-0">
@@ -292,7 +292,7 @@ export default function App() {
                         </button>
 
                         <button 
-                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          onClick={() => { handleServiceClick('Screen Repair'); setIsServicesOpen(false); }}
                           className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
                         >
                           <div className="w-12 h-12 rounded-2xl bg-[#fff7ed] flex items-center justify-center shrink-0">
@@ -305,7 +305,7 @@ export default function App() {
                         </button>
 
                         <button 
-                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          onClick={() => { handleServiceClick('Screen Replacement'); setIsServicesOpen(false); }}
                           className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
                         >
                           <div className="w-12 h-12 rounded-2xl bg-[#f5f3ff] flex items-center justify-center shrink-0">
@@ -318,7 +318,7 @@ export default function App() {
                         </button>
 
                         <button 
-                          onClick={() => { setView('home'); setIsServicesOpen(false); }}
+                          onClick={() => { handleServiceClick('Wall Mount'); setIsServicesOpen(false); }}
                           className="w-full flex items-center gap-5 px-6 py-3.5 hover:bg-gray-50 transition-colors group text-left"
                         >
                           <div className="w-12 h-12 rounded-2xl bg-[#f8f9fa] flex items-center justify-center shrink-0">
@@ -432,7 +432,7 @@ export default function App() {
                   <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Services</div>
                   <div className="grid grid-cols-1 gap-3">
                     <button 
-                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      onClick={() => { handleServiceClick('LED TV Repair'); setIsMobileMenuOpen(false); }}
                       className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#eef4ff] flex items-center justify-center">
@@ -444,7 +444,7 @@ export default function App() {
                       </div>
                     </button>
                     <button 
-                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      onClick={() => { handleServiceClick('Screen Repair'); setIsMobileMenuOpen(false); }}
                       className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#fff7ed] flex items-center justify-center">
@@ -456,7 +456,7 @@ export default function App() {
                       </div>
                     </button>
                     <button 
-                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      onClick={() => { handleServiceClick('Screen Replacement'); setIsMobileMenuOpen(false); }}
                       className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#f5f3ff] flex items-center justify-center">
@@ -468,7 +468,7 @@ export default function App() {
                       </div>
                     </button>
                     <button 
-                      onClick={() => { setView('home'); setIsMobileMenuOpen(false); }}
+                      onClick={() => { handleServiceClick('Wall Mount'); setIsMobileMenuOpen(false); }}
                       className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl text-left"
                     >
                       <div className="w-10 h-10 rounded-xl bg-[#f8f9fa] flex items-center justify-center">

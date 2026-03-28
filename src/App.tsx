@@ -212,7 +212,6 @@ export default function App() {
   // Instant Quote states
   const [quoteModel, setQuoteModel] = useState('');
   const [quoteIssue, setQuoteIssue] = useState('');
-  const [quoteFiles, setQuoteFiles] = useState<{ images: File[], videos: File[] }>({ images: [], videos: [] });
 
   const getNextThreeDays = () => {
     const days = [];
@@ -268,11 +267,6 @@ export default function App() {
     let message = `*Instant Quote Request*%0A%0A`;
     if (quoteModel) message += `*TV Model:* ${quoteModel}%0A`;
     if (quoteIssue) message += `*Issue Details:* ${quoteIssue}%0A`;
-    
-    const fileCount = quoteFiles.images.length + quoteFiles.videos.length;
-    if (fileCount > 0) {
-      message += `%0A_I have ${quoteFiles.images.length} images and ${quoteFiles.videos.length} videos ready to share._%0A`;
-    }
     
     message += `%0A_Please let me know the estimate._`;
     window.open(`https://wa.me/919513134313?text=${message}`, '_blank');
@@ -1203,57 +1197,10 @@ export default function App() {
                   />
                 </div>
 
-                {/* File Upload Options */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Add Pictures</label>
-                    <label className="flex flex-col items-center justify-center w-full h-32 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-black hover:bg-white transition-all cursor-pointer group">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-black mb-2" />
-                        <p className="text-xs font-bold text-gray-400 group-hover:text-black">
-                          {quoteFiles.images.length > 0 ? `${quoteFiles.images.length} Selected` : 'Upload Images'}
-                        </p>
-                      </div>
-                      <input 
-                        type="file" 
-                        className="hidden" 
-                        accept="image/*" 
-                        multiple 
-                        onChange={(e) => {
-                          if (e.target.files) {
-                            setQuoteFiles(prev => ({ ...prev, images: Array.from(e.target.files!) }));
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 block">Attach Video</label>
-                    <label className="flex flex-col items-center justify-center w-full h-32 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-black hover:bg-white transition-all cursor-pointer group">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <PlayCircle className="w-8 h-8 text-gray-400 group-hover:text-black mb-2" />
-                        <p className="text-xs font-bold text-gray-400 group-hover:text-black">
-                          {quoteFiles.videos.length > 0 ? `${quoteFiles.videos.length} Selected` : 'Upload Video'}
-                        </p>
-                      </div>
-                      <input 
-                        type="file" 
-                        className="hidden" 
-                        accept="video/*" 
-                        onChange={(e) => {
-                          if (e.target.files) {
-                            setQuoteFiles(prev => ({ ...prev, videos: Array.from(e.target.files!) }));
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                </div>
-
                 <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-4">
-                  <HelpCircle className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                  <PlayCircle className="w-6 h-6 text-blue-600 flex-shrink-0" />
                   <p className="text-sm text-blue-800 font-medium">
-                    You can proceed even if some fields are empty. We'll help you on WhatsApp!
+                    Tip: You can share pictures or a video of the issue directly on WhatsApp after clicking the button below.
                   </p>
                 </div>
               </div>

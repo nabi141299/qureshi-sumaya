@@ -213,9 +213,38 @@ export default function App() {
   const [quoteModel, setQuoteModel] = useState('');
   const [quoteIssue, setQuoteIssue] = useState('');
 
-  const getNextThreeDays = () => {
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+
+  const FAQ_ITEMS = [
+    {
+      q: "What types of TVs do you repair?",
+      a: "We repair all major types including LED, LCD, QLED, OLED, and Plasma TVs from all leading brands like Samsung, LG, Sony, Mi, and more."
+    },
+    {
+      q: "Do you provide home service in Bangalore?",
+      a: "Yes, we provide doorstep TV repair service across Bangalore. Our technicians can usually reach your location within 60 minutes."
+    },
+    {
+      q: "Is there a warranty on the repairs?",
+      a: "Absolutely! We offer a comprehensive warranty of up to 180 days on all our repairs and parts replaced."
+    },
+    {
+      q: "What are your service charges?",
+      a: "We believe in transparent pricing. We provide a free inspection if you choose to go ahead with the repair. For specific issues, you can get an instant quote on WhatsApp."
+    },
+    {
+      q: "Do you use genuine spare parts?",
+      a: "Yes, we only use high-quality, genuine spare parts to ensure the longevity and performance of your TV."
+    },
+    {
+      q: "How long does a typical repair take?",
+      a: "Most minor repairs are completed on-site within 1-2 hours. For major panel or screen issues, it might take 24-48 hours at our advanced service center."
+    }
+  ];
+
+  const getAvailableDates = () => {
     const days = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 14; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
       days.push({
@@ -223,15 +252,16 @@ export default function App() {
         dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
         dateNum: date.getDate(),
         month: date.toLocaleDateString('en-US', { month: 'short' }),
+        year: date.getFullYear(),
       });
     }
     return days;
   };
 
   const timeSlots = [
-    '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', 
-    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM',
-    '07:00 PM', '08:00 PM'
+    { label: 'Morning', slots: ['10:00 AM', '11:00 AM', '12:00 PM'] },
+    { label: 'Afternoon', slots: ['01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM'] },
+    { label: 'Evening', slots: ['05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'] }
   ];
 
   const isTimeSlotAvailable = (dateStr: string | null, timeStr: string) => {
@@ -862,6 +892,48 @@ export default function App() {
                 ))}
               </div>
             </section>
+
+            {/* FAQ Section */}
+            <section className="mt-32 mb-20">
+              <div className="max-w-3xl mx-auto">
+                <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Frequently Asked Questions</h2>
+                <div className="space-y-4">
+                  {FAQ_ITEMS.map((faq, i) => (
+                    <div 
+                      key={i}
+                      className="bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all hover:shadow-md"
+                    >
+                      <button 
+                        onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+                        className="w-full px-8 py-6 flex items-center justify-between text-left group"
+                      >
+                        <span className="text-lg font-bold text-gray-900 group-hover:text-black transition-colors">{faq.q}</span>
+                        <motion.div
+                          animate={{ rotate: expandedFaq === i ? 180 : 0 }}
+                          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 group-hover:text-black transition-all"
+                        >
+                          <ChevronDown className="w-5 h-5" />
+                        </motion.div>
+                      </button>
+                      <AnimatePresence>
+                        {expandedFaq === i && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          >
+                            <div className="px-8 pb-8 text-gray-500 font-medium leading-relaxed">
+                              {faq.a}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
           </motion.main>
         ) : view === 'wall-mount-selection' ? (
           <motion.main 
@@ -1234,50 +1306,68 @@ export default function App() {
 
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
               {/* Date Selection */}
-              <div className="mb-8">
-                <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 block">Select Date (Next 3 Days)</label>
-                <div className="grid grid-cols-3 gap-4">
-                  {getNextThreeDays().map((day) => (
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-6">
+                  <label className="text-sm font-bold text-gray-400 uppercase tracking-widest block">Select Date</label>
+                  <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Next 14 Days Available</span>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
+                  {getAvailableDates().map((day) => (
                     <button
                       key={day.fullDate}
                       onClick={() => setSelectedDate(day.fullDate)}
-                      className={`flex flex-col items-center p-4 rounded-2xl border-2 transition-all ${
+                      className={`flex flex-col items-center min-w-[75px] p-4 rounded-2xl border-2 transition-all shrink-0 ${
                         selectedDate === day.fullDate 
-                          ? 'border-black bg-black text-white' 
-                          : 'border-gray-100 hover:border-gray-200 text-gray-600'
+                          ? 'border-black bg-black text-white shadow-lg shadow-black/20 scale-105' 
+                          : 'border-gray-100 hover:border-gray-200 text-gray-600 bg-white'
                       }`}
                     >
-                      <span className="text-xs font-bold uppercase mb-1">{day.dayName}</span>
-                      <span className="text-2xl font-bold">{day.dateNum}</span>
-                      <span className="text-xs font-medium opacity-60">{day.month}</span>
+                      <span className={`text-[10px] font-bold uppercase mb-1 ${selectedDate === day.fullDate ? 'text-gray-400' : 'text-gray-400'}`}>{day.dayName}</span>
+                      <span className="text-xl font-black">{day.dateNum}</span>
+                      <span className={`text-[10px] font-bold uppercase mt-1 ${selectedDate === day.fullDate ? 'text-gray-400' : 'text-gray-400'}`}>{day.month}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Time Selection */}
-              <div className="mb-8">
-                <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 block">Select Time Slot</label>
-                <div className="grid grid-cols-3 gap-3">
-                  {timeSlots.map((time) => {
-                    const isAvailable = isTimeSlotAvailable(selectedDate, time);
-                    return (
-                      <button
-                        key={time}
-                        disabled={!isAvailable}
-                        onClick={() => setSelectedTime(time)}
-                        className={`py-3 rounded-xl border-2 text-sm font-bold transition-all ${
-                          !isAvailable
-                            ? 'border-gray-50 bg-gray-50 text-gray-300 cursor-not-allowed'
-                            : selectedTime === time 
-                              ? 'border-black bg-black text-white' 
-                              : 'border-gray-100 hover:border-gray-200 text-gray-600'
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    );
-                  })}
+              <div className="mb-10">
+                <label className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 block">Select Time Slot</label>
+                <div className="space-y-8">
+                  {timeSlots.map((group) => (
+                    <div key={group.label}>
+                      <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                        {group.label}
+                      </h3>
+                      <div className="grid grid-cols-3 gap-3">
+                        {group.slots.map((time) => {
+                          const isAvailable = isTimeSlotAvailable(selectedDate, time);
+                          return (
+                            <button
+                              key={time}
+                              disabled={!isAvailable}
+                              onClick={() => setSelectedTime(time)}
+                              className={`py-3.5 rounded-xl border-2 text-[13px] font-bold transition-all relative overflow-hidden ${
+                                !isAvailable
+                                  ? 'border-gray-50 bg-gray-50 text-gray-300 cursor-not-allowed'
+                                  : selectedTime === time 
+                                    ? 'border-black bg-black text-white shadow-lg shadow-black/10' 
+                                    : 'border-gray-100 hover:border-gray-200 text-gray-600 bg-white'
+                              }`}
+                            >
+                              {time}
+                              {!isAvailable && (
+                                <div className="absolute inset-0 bg-gray-50/50 flex items-center justify-center">
+                                  <div className="w-full h-[1px] bg-gray-200 rotate-12" />
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 

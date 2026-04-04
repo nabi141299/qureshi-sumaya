@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { findServiceCenters, LocationResult } from './services/geminiService';
 import { 
   Tv, 
   Smartphone, 
@@ -213,6 +214,9 @@ export default function App() {
   const [quoteModel, setQuoteModel] = useState('');
   const [quoteIssue, setQuoteIssue] = useState('');
 
+  const [locationResults, setLocationResults] = useState<LocationResult | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const FAQ_ITEMS = [
@@ -285,6 +289,33 @@ export default function App() {
   const handleShareWhatsApp = () => {
     const message = `*New Appointment Request*%0A%0A*Name:* ${userName}%0A*Phone:* ${userPhone}%0A*Service:* ${selectedService || 'General Repair'}%0A*Date:* ${selectedDate}%0A*Time:* ${selectedTime}`;
     window.open(`https://wa.me/919513134313?text=${message}`, '_blank');
+  };
+
+  const handleFindServiceCenters = async () => {
+    setView('service-centers');
+    setIsLocating(true);
+    
+    let lat, lng;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          lat = position.coords.latitude;
+          lng = position.coords.longitude;
+          const results = await findServiceCenters(lat, lng);
+          setLocationResults(results);
+          setIsLocating(false);
+        },
+        async () => {
+          const results = await findServiceCenters();
+          setLocationResults(results);
+          setIsLocating(false);
+        }
+      );
+    } else {
+      const results = await findServiceCenters();
+      setLocationResults(results);
+      setIsLocating(false);
+    }
   };
 
   const handleShareEmail = () => {
@@ -844,14 +875,23 @@ export default function App() {
             </div>
 
             {/* Trust Section */}
-            <div className="mt-8 flex items-center gap-5">
-              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
-                <Star className="w-6 h-6 text-black fill-current" />
+            <div className="mt-8 flex items-center justify-between">
+              <div className="flex items-center gap-5">
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+                  <Star className="w-6 h-6 text-black fill-current" />
+                </div>
+                <div>
+                  <div className="text-2xl font-black leading-none tracking-tight">5.0</div>
+                  <div className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mt-1">Service Rating</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-black leading-none tracking-tight">5.0</div>
-                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mt-1">Service Rating</div>
-              </div>
+              <button 
+                onClick={handleFindServiceCenters}
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold shadow-sm hover:shadow-md transition-all"
+              >
+                <MapPin className="w-4 h-4 text-red-500" />
+                Find Service Centers
+              </button>
             </div>
 
             {/* Why Choose Section */}
@@ -934,6 +974,87 @@ export default function App() {
                 </div>
               </div>
             </section>
+          </motion.main>
+        ) : view === 'service-centers' ? (
+          <motion.main 
+            key="service-centers"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="max-w-4xl mx-auto px-6 py-12"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <button 
+                onClick={() => setView('home')}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <h1 className="text-3xl font-bold tracking-tight">Service Centers</h1>
+            </div>
+
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+              {isLocating ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <div className="w-12 h-12 border-4 border-gray-100 border-t-black rounded-full animate-spin mb-6" />
+                  <p className="text-gray-500 font-bold animate-pulse">Locating nearby service centers...</p>
+                </div>
+              ) : locationResults ? (
+                <div className="space-y-8">
+                  <div className="prose prose-sm max-w-none text-gray-600 font-medium leading-relaxed">
+                    <div className="whitespace-pre-wrap">{locationResults.text}</div>
+                  </div>
+                  
+                  {locationResults.links.length > 0 && (
+                    <div className="pt-8 border-t border-gray-50">
+                      <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Verified Locations on Google Maps</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {locationResults.links.map((link, i) => (
+                          <a 
+                            key={i}
+                            href={link.uri}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-black hover:bg-white transition-all group"
+                          >
+                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm group-hover:bg-black group-hover:text-white transition-colors">
+                              <MapPin className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-bold text-gray-900 line-clamp-1">{link.title}</p>
+                              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Open in Maps</p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-black transition-colors" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100 flex gap-4">
+                    <Navigation className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-blue-900 font-bold mb-1">Doorstep Service Available</p>
+                      <p className="text-xs text-blue-700 font-medium">
+                        Can't visit us? We provide free pickup and drop across Bangalore. 
+                        <button onClick={() => setView('appointment-booking')} className="underline ml-1 font-bold">Book an appointment</button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-20">
+                  <AlertTriangle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+                  <p className="text-gray-500 font-bold">Something went wrong. Please try again.</p>
+                  <button 
+                    onClick={handleFindServiceCenters}
+                    className="mt-6 px-8 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-all"
+                  >
+                    Retry Search
+                  </button>
+                </div>
+              )}
+            </div>
           </motion.main>
         ) : view === 'wall-mount-selection' ? (
           <motion.main 

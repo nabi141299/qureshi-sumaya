@@ -1626,6 +1626,18 @@ export default function App() {
               <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
                 iPixel Electronics is a leading TV repair service provider in Bangalore, specializing in screen repair and panel replacement for all major brands.
               </p>
+              <div className="mt-8 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-gray-400" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Our Location</p>
+                  <p className="text-gray-600 text-sm font-bold leading-relaxed">
+                    22 3rd A Cross, Gururaja Layout,<br />
+                    Doddanakundi, Bangalore 560037
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>

@@ -1035,10 +1035,11 @@ export default function App() {
                   <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100 flex gap-4">
                     <Navigation className="w-6 h-6 text-blue-600 flex-shrink-0" />
                     <div>
-                      <p className="text-sm text-blue-900 font-bold mb-1">Doorstep Service Available</p>
+                      <h3 className="text-sm text-blue-900 font-bold mb-2 leading-relaxed">
+                        For your convenience, iPixel Electronics offers a hassle-free pick-and-drop facility for TV repairs at very nominal charges.
+                      </h3>
                       <p className="text-xs text-blue-700 font-medium">
-                        Can't visit us? We provide free pickup and drop across Bangalore. 
-                        <button onClick={() => setView('appointment-booking')} className="underline ml-1 font-bold">Book an appointment</button>
+                        <button onClick={() => setView('appointment-booking')} className="underline font-bold">Book an appointment</button>
                       </p>
                     </div>
                   </div>

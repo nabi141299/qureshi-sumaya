@@ -216,6 +216,7 @@ export default function App() {
 
   const [locationResults, setLocationResults] = useState<LocationResult | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [showServiceAreaList, setShowServiceAreaList] = useState(false);
 
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
@@ -935,8 +936,8 @@ export default function App() {
 
             {/* FAQ Section */}
             <section className="mt-32 mb-20">
-              <div className="max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Frequently Asked Questions</h2>
+              <div className="max-w-3xl">
+                <h2 className="text-xl font-bold tracking-tight mb-8">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                   {FAQ_ITEMS.map((faq, i) => (
                     <div 
@@ -945,9 +946,9 @@ export default function App() {
                     >
                       <button 
                         onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
-                        className="w-full px-8 py-6 flex items-center justify-between text-left group"
+                        className="w-full px-6 py-4 flex items-center justify-between text-left group"
                       >
-                        <span className="text-lg font-bold text-gray-900 group-hover:text-black transition-colors">{faq.q}</span>
+                        <span className="text-[15px] font-bold text-gray-900 group-hover:text-black transition-colors">{faq.q}</span>
                         <motion.div
                           animate={{ rotate: expandedFaq === i ? 180 : 0 }}
                           className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-gray-100 group-hover:text-black transition-all"
@@ -963,7 +964,7 @@ export default function App() {
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                           >
-                            <div className="px-8 pb-8 text-gray-500 font-medium leading-relaxed">
+                            <div className="px-6 pb-6 text-sm text-gray-500 font-medium leading-relaxed">
                               {faq.a}
                             </div>
                           </motion.div>
@@ -1645,10 +1646,42 @@ export default function App() {
             <div>
               <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-6">Services</h4>
               <ul className="flex flex-col gap-4">
-                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">LED TV Repair</button></li>
-                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">Screen Repair</button></li>
-                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium">Panel Replacement</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">LED TV Repair</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Screen Repair</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Panel Replacement</button></li>
               </ul>
+            </div>
+
+            <div>
+              <button 
+                onClick={() => setShowServiceAreaList(!showServiceAreaList)}
+                className="flex items-center justify-between w-full group py-1"
+              >
+                <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-0 group-hover:text-black transition-colors">Service Areas</h4>
+                <motion.div
+                  animate={{ rotate: showServiceAreaList ? 180 : 0 }}
+                  className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-black transition-all"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              <div className="h-4" /> {/* Spacer */}
+              <AnimatePresence>
+                {showServiceAreaList && (
+                  <motion.ul 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="flex flex-col gap-4 overflow-hidden"
+                  >
+                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">TV repair in Doddanakundi</span></li>
+                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">Television service center Marathahalli</span></li>
+                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">TV screen replacement in Gururaja Layout</span></li>
+                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">Best TV technician in Outer Ring Road, Bangalore</span></li>
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </div>
           </div>
           <div className="mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">

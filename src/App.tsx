@@ -683,7 +683,7 @@ export default function App() {
             className="max-w-7xl mx-auto px-6 py-4 lg:py-8"
           >
             <h1 className="text-[16px] sm:text-[20px] lg:text-[22px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-md leading-tight tracking-tight">
-              Expert TV Service: Precision Screen Repair & Panel Replacement
+              Expert TV Repair Bangalore: Smart TV Repair Service & Panel Replacement
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -895,10 +895,10 @@ export default function App() {
             </div>
 
             {/* Why Choose Section */}
-            <div className="mt-12 max-w-2xl">
-              <h2 className="text-2xl font-bold mb-4 tracking-tight">Why Choose iPixel Electronics?</h2>
+            <div className="mt-12 max-w-3xl">
+              <h2 className="text-2xl font-bold mb-4 tracking-tight text-gray-900">Television Screen Replacement Bangalore: Your Trusted LED TV Repair Shop Near Me</h2>
               <p className="text-gray-500 text-[15px] leading-relaxed font-medium">
-                At iPixel, we provide reliable solutions backed by a warranty of up to 180 days. By utilizing our in-house bonding machine, we eliminate the middleman—allowing us to deliver high-quality results at an affordable price.
+                At iPixel, we provide the best LCD TV panel replacement price and reliable solutions backed by a warranty of up to 180 days. By utilizing our in-house bonding machine, we eliminate the middleman—allowing us to deliver high-quality results at an affordable price.
               </p>
             </div>
 

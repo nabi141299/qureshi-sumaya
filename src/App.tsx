@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { findServiceCenters, LocationResult } from './services/geminiService';
 import { 
   Tv, 
@@ -219,6 +219,15 @@ export default function App() {
   const [showServiceAreaList, setShowServiceAreaList] = useState(false);
 
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'book') {
+      setView('appointment-booking');
+      // Scroll to top to ensure the user sees the booking form
+      window.scrollTo(0, 0);
+    }
+  }, []);
 
   const FAQ_ITEMS = [
     {

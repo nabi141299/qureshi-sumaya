@@ -196,7 +196,15 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote'>('home');
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('action') === 'book' || params.get('view') === 'appointment-booking') {
+        return 'appointment-booking';
+      }
+    }
+    return 'home';
+  });
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
@@ -221,13 +229,9 @@ export default function App() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('action') === 'book') {
-      setView('appointment-booking');
-      // Scroll to top to ensure the user sees the booking form
-      window.scrollTo(0, 0);
-    }
-  }, []);
+    // Scroll to top when view changes
+    window.scrollTo(0, 0);
+  }, [view]);
 
   const FAQ_ITEMS = [
     {
@@ -1424,16 +1428,16 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-3xl mx-auto px-6 py-12"
+            className="max-w-3xl px-6 py-12"
           >
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-4 mb-10">
               <button 
                 onClick={() => setView('home')}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-black hover:bg-gray-100 transition-all active:scale-95"
               >
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-3xl font-bold tracking-tight">Book Appointment</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Book Appointment</h1>
             </div>
 
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">

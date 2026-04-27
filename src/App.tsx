@@ -1428,7 +1428,7 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-3xl px-6 py-12"
+            className="max-w-3xl mx-auto px-6 py-12"
           >
             <div className="flex items-center gap-4 mb-10">
               <button 

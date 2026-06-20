@@ -199,8 +199,26 @@ export default function App() {
   const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('action') === 'book' || params.get('view') === 'appointment-booking') {
+      const urlView = params.get('view');
+      const validViews = [
+        'home',
+        'diagnosis',
+        'screen-issue',
+        'installation-type',
+        'tv-size-selection',
+        'screen-brands',
+        'wall-mount-selection',
+        'appointment-booking',
+        'instant-quote'
+      ];
+      if (urlView && validViews.includes(urlView)) {
+        return urlView as any;
+      }
+      if (params.get('action') === 'book') {
         return 'appointment-booking';
+      }
+      if (params.get('action') === 'screen-issue') {
+        return 'screen-issue';
       }
     }
     return 'home';

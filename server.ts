@@ -31,6 +31,22 @@ async function startServer() {
     });
   });
 
+  // Serve sitemap.xsl with explicit text/xsl content-type
+  app.get("/sitemap.xsl", (req, res) => {
+    res.header("Content-Type", "text/xsl");
+    const publicPath = path.join(process.cwd(), "public", "sitemap.xsl");
+    res.sendFile(publicPath, (err) => {
+      if (err) {
+        const distPath = path.join(process.cwd(), "dist", "sitemap.xsl");
+        res.sendFile(distPath, (err2) => {
+          if (err2) {
+            res.status(404).send("Sitemap XSL stylesheet not found");
+          }
+        });
+      }
+    });
+  });
+
   // Serve robots.txt with explicit text/plain content-type
   app.get("/robots.txt", (req, res) => {
     res.header("Content-Type", "text/plain");

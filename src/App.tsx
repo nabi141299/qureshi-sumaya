@@ -51,6 +51,8 @@ import {
   Check,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './components/ServiceLandingPages';
+import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 
 const SHOP_ADDRESS = "iPixel Electronics, #22, Ground Floor, 3rd A Cross, Doddanekundi, Bangalore, Karnataka 560037";
 
@@ -196,7 +198,7 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote'>(() => {
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get('view');
@@ -209,7 +211,12 @@ export default function App() {
         'screen-brands',
         'wall-mount-selection',
         'appointment-booking',
-        'instant-quote'
+        'instant-quote',
+        'screen-repair',
+        'tv-installation',
+        'sony-repair',
+        'samsung-repair',
+        'lg-repair'
       ];
       if (urlView && validViews.includes(urlView)) {
         return urlView as any;
@@ -965,6 +972,9 @@ export default function App() {
               </div>
             </section>
 
+            {/* Google reviews interactive widget section */}
+            <GoogleReviewsWidget />
+
             {/* FAQ Section */}
             <section className="mt-32 mb-20">
               <div className="max-w-3xl">
@@ -1570,6 +1580,16 @@ export default function App() {
               </div>
             </div>
           </motion.main>
+        ) : view === 'screen-repair' ? (
+          <ScreenRepairPage setView={setView} />
+        ) : view === 'tv-installation' ? (
+          <TvInstallationPage setView={setView} />
+        ) : view === 'sony-repair' ? (
+          <BrandRepairPage setView={setView} brand="sony" />
+        ) : view === 'samsung-repair' ? (
+          <BrandRepairPage setView={setView} brand="samsung" />
+        ) : view === 'lg-repair' ? (
+          <BrandRepairPage setView={setView} brand="lg" />
         ) : (
           <motion.main 
             key="screen-issue"
@@ -1719,16 +1739,38 @@ export default function App() {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="flex flex-col gap-4 overflow-hidden"
                   >
-                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">TV repair in Doddanakundi</span></li>
-                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">Television service center Marathahalli</span></li>
-                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">TV screen replacement in Gururaja Layout</span></li>
-                    <li><span className="text-gray-500 hover:text-black transition-colors text-sm font-medium cursor-default block">Best TV technician in Outer Ring Road, Bangalore</span></li>
+                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Marathahalli &amp; Whitefield</span></li>
+                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">HSR Layout &amp; Indiranagar</span></li>
+                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Bellandur &amp; Outer Ring Road</span></li>
+                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Varthur &amp; Carmelaram</span></li>
                   </motion.ul>
                 )}
               </AnimatePresence>
             </div>
           </div>
-          <div className="mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+
+          {/* Dedicated local SEO Service Areas section */}
+          <div className="mt-16 pt-8 border-t border-gray-100">
+            <div className="flex flex-col md:flex-row gap-4 items-start justify-between">
+              <div className="max-w-3xl">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-red-500 shrink-0" />
+                  Primary Service Coverage In Bangalore
+                </h4>
+                <p className="text-gray-500 text-sm leading-relaxed font-semibold">
+                  Providing Doorstep TV Repair &amp; Pickup/Drop in Marathahalli, Whitefield, Hoodi, HSR Layout, Indiranagar, Mahadevapura, Bellandur, Varthur, Balagere, Carmelaram, Kadubeesanahalli, Gunjur Village and Outer Ring Road.
+                </p>
+              </div>
+              <button 
+                onClick={() => setView('appointment-booking')}
+                className="mt-2 md:mt-0 px-6 py-3 bg-black text-white hover:bg-gray-900 rounded-xl font-bold text-xs font-mono uppercase tracking-wider shrink-0 transition-all active:scale-95"
+              >
+                Book Doorstep Technician
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-16 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-xs">© 2026 iPixel Electronics. All rights reserved.</p>
             <div className="flex gap-8">
               <a href="#" className="text-gray-400 hover:text-black transition-colors text-xs">Privacy Policy</a>

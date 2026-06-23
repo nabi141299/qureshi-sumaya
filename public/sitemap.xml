@@ -40,4 +40,44 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- TV Screen Repair & Panel Replacement Premium Page -->
+  <url>
+    <loc>https://www.ipixelelectronics.com/?view=screen-repair</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- TV Installation & Wall Mounting Premium Page -->
+  <url>
+    <loc>https://www.ipixelelectronics.com/?view=tv-installation</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Sony TV Repair Bangalore Specialist Page -->
+  <url>
+    <loc>https://www.ipixelelectronics.com/?view=sony-repair</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Samsung TV Repair Bangalore Specialist Page -->
+  <url>
+    <loc>https://www.ipixelelectronics.com/?view=samsung-repair</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- LG TV Repair Bangalore Specialist Page -->
+  <url>
+    <loc>https://www.ipixelelectronics.com/?view=lg-repair</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>

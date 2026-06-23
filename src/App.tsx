@@ -53,6 +53,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './components/ServiceLandingPages';
 import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
+import { TechnicalGuides } from './components/TechnicalGuides';
 
 const SHOP_ADDRESS = "iPixel Electronics, #22, Ground Floor, 3rd A Cross, Doddanekundi, Bangalore, Karnataka 560037";
 
@@ -198,7 +199,7 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair'>(() => {
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get('view');
@@ -216,7 +217,8 @@ export default function App() {
         'tv-installation',
         'sony-repair',
         'samsung-repair',
-        'lg-repair'
+        'lg-repair',
+        'tech-guides'
       ];
       if (urlView && validViews.includes(urlView)) {
         return urlView as any;
@@ -229,6 +231,13 @@ export default function App() {
       }
     }
     return 'home';
+  });
+  const [selectedGuideId, setSelectedGuideId] = useState<string | undefined>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('guide') || params.get('id') || undefined;
+    }
+    return undefined;
   });
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
@@ -257,6 +266,26 @@ export default function App() {
     // Scroll to top when view changes
     window.scrollTo(0, 0);
   }, [view]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (view === 'home') {
+        url.searchParams.delete('view');
+      } else {
+        url.searchParams.set('view', view);
+      }
+      
+      if (selectedGuideId && view === 'tech-guides') {
+        url.searchParams.set('guide', selectedGuideId);
+      } else {
+        url.searchParams.delete('guide');
+        url.searchParams.delete('id');
+      }
+      
+      window.history.pushState({}, '', url.toString());
+    }
+  }, [view, selectedGuideId]);
 
   const FAQ_ITEMS = [
     {
@@ -506,6 +535,13 @@ export default function App() {
                 </AnimatePresence>
               </div>
 
+              <button 
+                onClick={() => setView('tech-guides')}
+                className="text-[15px] font-semibold text-gray-500 hover:text-black transition-colors cursor-pointer"
+              >
+                Troubleshooting
+              </button>
+ 
               <div className="relative">
                 <button 
                   onClick={() => setIsSupportOpen(!isSupportOpen)}
@@ -648,6 +684,18 @@ export default function App() {
                       <div>
                         <div className="text-sm font-bold">TV Wall Mount</div>
                         <div className="text-xs text-gray-400">Installation services</div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => { setView('tech-guides'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-blue-50/70 text-blue-900 rounded-2xl text-left border border-blue-100/50"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                        <HelpCircle className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-blue-950">TV Troubleshooting</div>
+                        <div className="text-xs text-blue-600 font-semibold">24 diagnostic guides</div>
                       </div>
                     </button>
                     <button 
@@ -940,6 +988,112 @@ export default function App() {
                 At iPixel, we provide the best LCD TV panel replacement price and reliable solutions backed by a warranty of up to 180 days. By utilizing our in-house bonding machine, we eliminate the middleman—allowing us to deliver high-quality results at an affordable price.
               </p>
             </div>
+
+            {/* Troubleshooting Knowledge Base SEO Section */}
+            <section className="mt-32">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+                <div className="max-w-2xl">
+                  <span className="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-3">
+                    Self-Diagnosis &amp; Resolution
+                  </span>
+                  <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none">
+                    TV Troubleshooting Guides
+                  </h2>
+                  <p className="text-gray-500 text-sm font-semibold leading-relaxed mt-3">
+                    Select a diagnostic guide below to view root causes, technical resolutions, and certified repair charges for common LED, QLED, and OLED screen defects in Bangalore.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setView('tech-guides')}
+                  className="flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-blue-600 transition-all group shrink-0 cursor-pointer"
+                >
+                  View All 24 Troubleshooting Guides 
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    id: 'sony-double-image',
+                    title: 'Sony Bravia LED TV Double Image Problem Repair',
+                    keyword: 'Sony Bravia LED TV double image problem repair Bengaluru',
+                    icon: <Layers className="w-5 h-5 text-indigo-600" />,
+                    bg: 'bg-indigo-50/50',
+                    desc: 'Screen content duplicates vertically or exhibits ghost lines overlaying the picture.'
+                  },
+                  {
+                    id: 'samsung-qled-vertical-lines',
+                    title: 'Samsung QLED TV Vertical Lines on Screen Fix',
+                    keyword: 'Samsung QLED TV vertical lines on screen fix',
+                    icon: <Tv className="w-5 h-5 text-blue-600" />,
+                    bg: 'bg-blue-50/50',
+                    desc: 'Thin vertical colored lines running top-to-bottom on quantum dot panels.'
+                  },
+                  {
+                    id: 'lg-blue-tint',
+                    title: 'LG LED TV Blue Screen Tint Problem Repair Price',
+                    keyword: 'LG LED TV blue screen tint problem repair price',
+                    icon: <Sun className="w-5 h-5 text-amber-600" />,
+                    bg: 'bg-amber-50/50',
+                    desc: 'The entire image becomes highly bluish or purple due to raw backlight phosphor decay.'
+                  },
+                  {
+                    id: 'mi-stuck-logo',
+                    title: 'Mi TV Stuck on Logo Boot Loop Fix',
+                    keyword: 'Mi TV stuck on logo boot loop fix',
+                    icon: <Cpu className="w-5 h-5 text-purple-600" />,
+                    bg: 'bg-purple-50/50',
+                    desc: 'TV is unable to load system software and repeats loading animation indefinitely.'
+                  },
+                  {
+                    id: 'sony-red-light-6',
+                    title: 'Sony Bravia Red Light Blinking 6 Times Repair',
+                    keyword: 'Sony Bravia red light blinking 6 times repair service Bangalore',
+                    icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
+                    bg: 'bg-red-50/50',
+                    desc: 'Over-voltage protection triggered by bad backlights or inverter boards.'
+                  },
+                  {
+                    id: 'lg-sound-no-picture',
+                    title: 'LG TV Sound Working But No Picture Display Fix',
+                    keyword: 'LG TV sound working but no picture display fix Bangalore',
+                    icon: <Volume2 className="w-5 h-5 text-emerald-600" />,
+                    bg: 'bg-emerald-50/50',
+                    desc: 'Sound is clearly audible, but the screen is completely black. Backlights need replacement.'
+                  }
+                ].map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      setSelectedGuideId(item.id);
+                      setView('tech-guides');
+                    }}
+                    className="bg-white p-6 rounded-3xl border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center`}>
+                          {item.icon}
+                        </div>
+                        <span className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-wider group-hover:text-blue-500 transition-colors">
+                          View Report →
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors leading-snug mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-[10px] font-bold font-mono text-gray-400 uppercase tracking-widest mb-3 leading-none block">
+                        {item.keyword}
+                      </p>
+                      <p className="text-xs text-gray-500 font-semibold leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {/* Offers Section */}
             <section className="mt-32">
@@ -1590,6 +1744,8 @@ export default function App() {
           <BrandRepairPage setView={setView} brand="samsung" />
         ) : view === 'lg-repair' ? (
           <BrandRepairPage setView={setView} brand="lg" />
+        ) : view === 'tech-guides' ? (
+          <TechnicalGuides setView={setView} selectedGuideId={selectedGuideId} setSelectedGuideId={setSelectedGuideId} />
         ) : (
           <motion.main 
             key="screen-issue"

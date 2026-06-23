@@ -1,0 +1,9 @@
+# Hostname
+Host: https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app
+
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+
+# Direct link to the XML Sitemap
+Sitemap: https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/sitemap.xml

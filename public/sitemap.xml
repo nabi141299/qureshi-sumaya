@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Direct Appointment Booking Form -->
+  <url>
+    <loc>https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/?view=appointment-booking</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Screen Issue and Repair Guide -->
+  <url>
+    <loc>https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/?view=screen-issue</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Professional Diagnosis Page -->
+  <url>
+    <loc>https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/?view=diagnosis</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Instant Service Quote Estimator -->
+  <url>
+    <loc>https://ais-pre-h3c47zq6ntmeiebybvog57-740976971301.asia-southeast1.run.app/?view=instant-quote</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

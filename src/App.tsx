@@ -55,6 +55,7 @@ import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './compone
 import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 import { TechnicalGuides } from './components/TechnicalGuides';
 import { OperatingHoursCard } from './components/OperatingHoursCard';
+import { GoogleMapWidget } from './components/GoogleMapWidget';
 
 const SHOP_ADDRESS = "ipixel electronics, #22, 3rd A Cross Rd, gururaja layout, doddanekundi, Doddanekkundi, Bengaluru, Karnataka 560037";
 
@@ -575,6 +576,14 @@ export default function App() {
                 className="text-[15px] font-semibold text-gray-500 hover:text-black transition-colors cursor-pointer"
               >
                 Troubleshooting
+              </button>
+
+              <button 
+                onClick={() => setView('service-centers')}
+                className="text-[15px] font-semibold text-gray-500 hover:text-black transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <MapPin className="w-4 h-4 text-red-500" />
+                <span>Store Map</span>
               </button>
  
               <div className="relative">
@@ -1325,6 +1334,23 @@ export default function App() {
               </div>
             </section>
 
+            {/* Google Maps Business Location Section */}
+            <section className="mt-28">
+              <div className="mb-6">
+                <span className="text-xs font-mono font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-2">
+                  Interactive Google Maps Location
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight leading-tight">
+                  iPixel Electronics Service Center Location
+                </h2>
+                <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed mt-1">
+                  Visit our workshop in Doddanekundi, Bengaluru for walk-in LED TV repairs, or get direct directions to our store.
+                </p>
+              </div>
+
+              <GoogleMapWidget />
+            </section>
+
             {/* FAQ Section */}
             <section className="mt-32 mb-20">
               <div className="max-w-3xl">
@@ -1382,7 +1408,15 @@ export default function App() {
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <h1 className="text-3xl font-bold tracking-tight">Service Centers</h1>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">iPixel Electronics Service Center</h1>
+                <p className="text-gray-500 font-medium text-xs sm:text-sm">Doddanekundi, Bengaluru • Official Workshop &amp; Doorstep Hub</p>
+              </div>
+            </div>
+
+            {/* Embedded Interactive Google Map */}
+            <div className="mb-8">
+              <GoogleMapWidget title="Store Map & Directions - Doddanekundi, Bengaluru" />
             </div>
 
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
@@ -2041,6 +2075,24 @@ export default function App() {
                     gururaja layout, doddanekundi,<br />
                     Doddanekkundi, Bengaluru, Karnataka 560037
                   </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <button 
+                      onClick={() => setView('service-centers')}
+                      className="px-3 py-1.5 bg-slate-900 hover:bg-black text-white text-[11px] font-bold rounded-lg transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                    >
+                      <MapPin className="w-3 h-3 text-red-400 fill-red-400" />
+                      <span>View Google Map</span>
+                    </button>
+                    <a 
+                      href="https://www.google.com/maps/dir/?api=1&destination=ipixel+electronics+3rd+A+Cross+Rd+doddanekundi+Bengaluru+Karnataka+560037"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1.5"
+                    >
+                      <Navigation className="w-3 h-3 text-blue-600" />
+                      <span>Get Directions</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

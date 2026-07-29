@@ -54,8 +54,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './components/ServiceLandingPages';
 import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 import { TechnicalGuides } from './components/TechnicalGuides';
+import { OperatingHoursCard } from './components/OperatingHoursCard';
 
-const SHOP_ADDRESS = "iPixel Electronics, #22, Ground Floor, 3rd A Cross, Doddanekundi, Bangalore, Karnataka 560037";
+const SHOP_ADDRESS = "ipixel electronics, #22, 3rd A Cross Rd, gururaja layout, doddanekundi, Doddanekkundi, Bengaluru, Karnataka 560037";
 
 const CATEGORIES = [
   { id: 'tv', name: 'TV', icon: <Tv className="w-4 h-4" /> },
@@ -432,13 +433,47 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
+      {/* Top Banner Ribbon - Always Visible Front Contact Bar */}
+      <div className="bg-slate-900 text-white border-b border-slate-800 text-xs py-2 px-4 sm:px-6 z-50">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+            <span className="hidden sm:inline font-bold text-slate-300">Bangalore Doorstep &amp; Shop Service:</span>
+            <span className="font-bold text-white">Direct Line:</span>
+            <a href="tel:+919513134313" className="font-mono font-black text-blue-300 hover:text-white underline underline-offset-2 transition-colors">
+              +91 95131 34313
+            </a>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a
+              href="tel:+919513134313"
+              className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg flex items-center gap-1.5 transition-all shadow-sm active:scale-95 text-[11px]"
+            >
+              <Phone className="w-3 h-3 fill-white text-blue-600" />
+              <span>Call Now</span>
+            </a>
+
+            <a
+              href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics!%20I%20want%20to%20inquire%20about%20TV%20repair%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2.5 py-1 bg-[#25d366] hover:bg-[#20bd5a] text-white font-bold rounded-lg flex items-center gap-1.5 transition-all shadow-sm active:scale-95 text-[11px]"
+            >
+              <MessageCircle className="w-3 h-3 fill-white text-[#25d366]" />
+              <span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-16">
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-8 lg:gap-16">
             {/* Logo */}
             <div 
-              className="flex items-center gap-3 cursor-pointer" 
+              className="flex items-center gap-3 cursor-pointer shrink-0" 
               onClick={() => setView('home')}
             >
               <div className="grid grid-cols-2 gap-0.5 w-9 h-9">
@@ -613,8 +648,55 @@ export default function App() {
             </nav>
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-4">
+          {/* Right side - Front Call & WhatsApp Actions */}
+          <div className="flex items-center gap-3">
+            {/* Desktop & Laptop Call / WhatsApp CTAs */}
+            <div className="hidden md:flex items-center gap-3">
+              <div className="flex flex-col text-right pr-2 border-r border-gray-200">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Direct Helpline</span>
+                <a href="tel:+919513134313" className="text-sm font-black text-gray-900 font-mono hover:text-blue-600 transition-colors">
+                  +91 95131 34313
+                </a>
+              </div>
+
+              <a
+                href="tel:+919513134313"
+                className="px-4 py-2.5 bg-black text-white font-bold text-xs rounded-xl hover:bg-gray-800 transition-all flex items-center gap-2 shadow-sm shrink-0"
+              >
+                <Phone className="w-4 h-4 text-blue-400 fill-blue-400" />
+                <span>Call +91 95131 34313</span>
+              </a>
+
+              <a
+                href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics!%20I%20want%20to%20inquire%20about%20TV%20repair%20services."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 bg-[#25d366] text-white font-bold text-xs rounded-xl hover:bg-[#20bd5a] transition-all flex items-center gap-2 shadow-sm shrink-0"
+              >
+                <MessageCircle className="w-4 h-4 fill-white text-[#25d366]" />
+                <span>WhatsApp</span>
+              </a>
+            </div>
+
+            {/* Mobile View Direct Call & WhatsApp Buttons */}
+            <div className="flex md:hidden items-center gap-2">
+              <a
+                href="tel:+919513134313"
+                className="px-3 py-2 bg-black text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95"
+              >
+                <Phone className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
+                <span>Call</span>
+              </a>
+              <a
+                href="https://wa.me/919513134313"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 bg-[#25d366] text-white font-bold text-xs rounded-xl flex items-center justify-center shadow-sm active:scale-95"
+              >
+                <MessageCircle className="w-4 h-4 fill-white" />
+              </a>
+            </div>
+
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -767,10 +849,58 @@ export default function App() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="max-w-7xl mx-auto px-6 py-4 lg:py-8"
+            className="max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-8"
           >
+            {/* Front & Center Direct Phone & WhatsApp Call Card */}
+            <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-950 text-white rounded-3xl p-5 sm:p-7 mb-6 border border-slate-700/50 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-emerald-400">
+                    Direct Helpline • Bangalore Doorstep &amp; Shop
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white mb-1">
+                  Need Immediate TV Repair or Price Quote?
+                </h2>
+                <p className="text-xs sm:text-sm font-semibold text-slate-300">
+                  Speak directly with our chief technician for instant diagnostics and doorstep technician dispatch.
+                </p>
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="p-2 bg-blue-500/20 rounded-xl border border-blue-400/30">
+                    <Phone className="w-5 h-5 text-blue-400 fill-blue-400" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block leading-none mb-1">Phone Number</span>
+                    <a href="tel:+919513134313" className="text-lg sm:text-2xl font-black font-mono tracking-tight text-blue-300 hover:text-white hover:underline transition-colors">
+                      +91 95131 34313
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
+                <a
+                  href="tel:+919513134313"
+                  className="px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-2xl flex items-center justify-center gap-2.5 transition-all shadow-lg shadow-blue-600/30 active:scale-95 cursor-pointer"
+                >
+                  <Phone className="w-4 h-4 fill-white text-blue-600" />
+                  <span>Call +91 95131 34313</span>
+                </a>
+                <a
+                  href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics!%20I%20want%20to%20inquire%20about%20TV%20repair%20services."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-4 bg-[#25d366] hover:bg-[#20bd5a] text-white font-bold text-sm rounded-2xl flex items-center justify-center gap-2.5 transition-all shadow-lg shadow-[#25d366]/30 active:scale-95 cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white text-[#25d366]" />
+                  <span>WhatsApp Us</span>
+                </a>
+              </div>
+            </div>
+
             <h1 className="text-[16px] sm:text-[20px] lg:text-[22px] font-bold mb-4 sm:mb-6 lg:mb-8 max-w-md leading-tight tracking-tight">
-              Expert TV Repair Bangalore: Smart TV Repair Service & Panel Replacement
+              Expert TV Repair Bangalore: Smart TV Repair Service &amp; Panel Replacement
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -850,7 +980,7 @@ export default function App() {
                               >
                                 <div className="grid grid-cols-2 gap-3 pt-1">
                                   <a 
-                                    href="https://wa.me/919876543210" 
+                                    href="https://wa.me/919513134313" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-[#25d366]/20 hover:scale-[1.02] active:scale-95 transition-all"
@@ -859,10 +989,10 @@ export default function App() {
                                     WhatsApp
                                   </a>
                                   <a 
-                                    href="tel:+919876543210"
+                                    href="tel:+919513134313"
                                     className="flex items-center justify-center gap-2 py-3.5 bg-black text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-black/10 hover:scale-[1.02] active:scale-95 transition-all"
                                   >
-                                    <Phone className="w-4 h-4" />
+                                    <Phone className="w-4 h-4 text-blue-400 fill-blue-400" />
                                     Call Now
                                   </a>
                                 </div>
@@ -909,7 +1039,7 @@ export default function App() {
                     <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
                       <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Upto 180 Days Warranty</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Up to 180 Days Warranty</h3>
                   </div>
                   <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Genuine parts and professional service backed by our comprehensive long-term warranty.</p>
                 </div>
@@ -929,9 +1059,9 @@ export default function App() {
                     <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
                       <Truck className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
-                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Free Pickup & Drop</h3>
+                    <h3 className="text-[13px] sm:text-lg font-bold leading-tight">Nominal Fee Pick-Up & Drop</h3>
                   </div>
-                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Hassle-free service with doorstep pickup and delivery across Bangalore city.</p>
+                  <p className="hidden sm:block text-xs sm:text-sm text-gray-500 leading-relaxed">Doorstep pick-up and drop-off service across Bangalore available at a nominal fee.</p>
                 </div>
 
                 <div className="bg-white rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all">
@@ -1128,6 +1258,72 @@ export default function App() {
 
             {/* Google reviews interactive widget section */}
             <GoogleReviewsWidget />
+
+            {/* Store Operating Hours Section */}
+            <section className="mt-32">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-10">
+                <div className="max-w-xl">
+                  <span className="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-3">
+                    Business Hours &amp; Availability
+                  </span>
+                  <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-tight mb-4">
+                    Store &amp; Doorstep Service Operating Hours
+                  </h2>
+                  <p className="text-gray-500 text-sm font-semibold leading-relaxed mb-6">
+                    Our Doddanekundi, Bangalore service center and doorstep technician teams operate 7 days a week. We provide rapid diagnostic visits and same-day LED TV repairs.
+                  </p>
+
+                  <div className="space-y-4 p-6 bg-slate-50 border border-slate-100 rounded-2xl">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
+                        01
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900">Doorstep Technician Visits</h4>
+                        <p className="text-xs text-gray-500 font-semibold mt-0.5">
+                          Available daily from 9:30 AM to 8:30 PM across all Bangalore service zones.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
+                        02
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900">Emergency &amp; WhatsApp Support</h4>
+                        <p className="text-xs text-gray-500 font-semibold mt-0.5">
+                          Instant photo/video fault consultation available on WhatsApp until 9:00 PM.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <a
+                      href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics!%20I%20want%20to%20check%20technician%20availability%20for%20today."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3.5 bg-[#25d366] text-white font-bold text-xs font-mono uppercase tracking-wider rounded-xl hover:bg-[#22c35e] transition-all flex items-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-white" />
+                      Check Today's Availability
+                    </a>
+                    <button
+                      onClick={() => setView('appointment-booking')}
+                      className="px-6 py-3.5 bg-black text-white font-bold text-xs font-mono uppercase tracking-wider rounded-xl hover:bg-gray-900 transition-all"
+                    >
+                      Book Time Slot
+                    </button>
+                  </div>
+                </div>
+
+                {/* Operating Hours Card matching the user's picture */}
+                <div className="w-full lg:w-auto shrink-0 flex justify-center">
+                  <OperatingHoursCard />
+                </div>
+              </div>
+            </section>
 
             {/* FAQ Section */}
             <section className="mt-32 mb-20">
@@ -1841,8 +2037,9 @@ export default function App() {
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Our Location</p>
                   <p className="text-gray-600 text-sm font-bold leading-relaxed">
-                    22 3rd A Cross, Gururaja Layout,<br />
-                    Doddanakundi, Bangalore 560037
+                    ipixel electronics, #22, 3rd A Cross Rd,<br />
+                    gururaja layout, doddanekundi,<br />
+                    Doddanekkundi, Bengaluru, Karnataka 560037
                   </p>
                 </div>
               </div>
@@ -1864,11 +2061,14 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-6">Services</h4>
-              <ul className="flex flex-col gap-4">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-900 mb-6">SERVICES</h4>
+              <ul className="flex flex-col gap-3.5">
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Television Repair Service</button></li>
+                <li><button onClick={() => setView('screen-repair')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Screen Repair Service</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Electronic Repair Service</button></li>
+                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Electronics Repair Shop</button></li>
                 <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">LED TV Repair</button></li>
-                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Screen Repair</button></li>
-                <li><button onClick={() => setView('home')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Panel Replacement</button></li>
+                <li><button onClick={() => setView('screen-repair')} className="text-gray-500 hover:text-black transition-colors text-sm font-medium text-left">Panel Replacement</button></li>
               </ul>
             </div>
 
@@ -1939,30 +2139,42 @@ export default function App() {
       {/* Footer Space */}
       <div className="h-20" />
 
-      {/* Floating Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
+      {/* Floating Action Contact Buttons with Phone Number */}
+      <div className="fixed bottom-6 right-4 sm:right-8 flex flex-col gap-3 z-50">
         {/* Call Button */}
         <motion.a
           href="tel:+919513134313"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-900 transition-colors"
-          title="Call Us"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-4 py-3 bg-slate-900 text-white rounded-full flex items-center gap-3 shadow-2xl border border-slate-700 hover:bg-black transition-all active:scale-95 group"
+          title="Call +91 95131 34313"
         >
-          <Phone className="w-6 h-6" />
+          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shrink-0 shadow-sm">
+            <Phone className="w-4 h-4 text-white fill-white" />
+          </div>
+          <div className="flex flex-col text-left pr-1">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 leading-none mb-0.5">Call Direct</span>
+            <span className="text-xs font-black font-mono text-blue-300 group-hover:text-white transition-colors">+91 95131 34313</span>
+          </div>
         </motion.a>
 
         {/* WhatsApp Button */}
         <motion.a
-          href="https://wa.me/919513134313"
+          href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics!%20I%20want%20to%20inquire%20about%20TV%20repair."
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-[#20ba56] transition-colors"
-          title="WhatsApp Us"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-4 py-3 bg-[#25D366] text-white rounded-full flex items-center gap-3 shadow-2xl hover:bg-[#20ba56] transition-all active:scale-95"
+          title="WhatsApp +91 95131 34313"
         >
-          <MessageCircle className="w-7 h-7 fill-white text-[#25D366]" />
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+            <MessageCircle className="w-5 h-5 fill-white text-[#25D366]" />
+          </div>
+          <div className="flex flex-col text-left pr-1">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-white/80 leading-none mb-0.5">WhatsApp Chat</span>
+            <span className="text-xs font-black font-mono text-white">+91 95131 34313</span>
+          </div>
         </motion.a>
       </div>
     </div>

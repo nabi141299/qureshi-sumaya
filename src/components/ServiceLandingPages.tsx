@@ -52,7 +52,7 @@ export const ScreenRepairPage: React.FC<ServicePageProps> = ({ setView }) => {
             LED TV Screen Replacement &amp; Original Panel Repair Bangalore
           </h1>
           <p className="text-lg text-gray-600 font-medium leading-relaxed">
-            Fast, professional, and authorized-grade services for cracked, blinking, or lined screens. We utilize 100% genuine replacement panels back by full certified warranties.
+            Fast, professional, and authorized-grade services for cracked, blinking, or lined screens. We utilize 100% genuine replacement panels backed by full 180-day certified warranties.
           </p>
           
           <div className="p-4 bg-orange-50 border border-orange-100 rounded-2xl flex gap-3 text-orange-800 text-sm">
@@ -107,7 +107,7 @@ export const ScreenRepairPage: React.FC<ServicePageProps> = ({ setView }) => {
             </div>
             <div className="flex items-start gap-3">
               <div className="w-5 h-5 rounded-full bg-green-50 text-[#16a34a] flex items-center justify-center shrink-0 mt-0.5 font-bold">✓</div>
-              <p className="text-sm font-medium text-gray-600"><strong>Certified Warranty:</strong> Rest easy with up to 3 to 12 months comprehensive backing on screen panels.</p>
+              <p className="text-sm font-medium text-gray-600"><strong>Certified Warranty:</strong> Rest easy with a 180-day comprehensive backing on screen panels.</p>
             </div>
           </div>
         </div>
@@ -517,7 +517,7 @@ export const BrandRepairPage: React.FC<BrandPageProps> = ({ setView, brand }) =>
           </div>
           <div>
             <h4 className="font-bold text-gray-900 mb-1">Warranty Certificate</h4>
-            <p className="text-xs text-gray-500 font-medium">Every professional component swap matches authentic guidelines and includes a written guarantee.</p>
+            <p className="text-xs text-gray-500 font-medium">Every professional component swap matches authentic guidelines and includes a written 180-day warranty certificate.</p>
           </div>
         </div>
 
@@ -527,7 +527,7 @@ export const BrandRepairPage: React.FC<BrandPageProps> = ({ setView, brand }) =>
           </div>
           <div>
             <h4 className="font-bold text-gray-900 mb-1">Super Express Same-Day</h4>
-            <p className="text-xs text-gray-500 font-medium font-semibold text-orange-700">90% of backlights or circuit boards are restored within are standard 3 to 6-hour timeline.</p>
+            <p className="text-xs text-gray-500 font-medium font-semibold text-orange-700">90% of backlights or circuit boards are restored within our standard 3 to 6-hour timeline.</p>
           </div>
         </div>
       </div>

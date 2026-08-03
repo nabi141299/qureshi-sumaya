@@ -56,6 +56,8 @@ import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 import { TechnicalGuides } from './components/TechnicalGuides';
 import { OperatingHoursCard } from './components/OperatingHoursCard';
 import { GoogleMapWidget } from './components/GoogleMapWidget';
+import { LocationLandingPage } from './components/LocationLandingPage';
+import { LOCATIONS_DATA } from './data/locations';
 
 const SHOP_ADDRESS = "ipixel electronics, #22, 3rd A Cross Rd, gururaja layout, doddanekundi, Doddanekkundi, Bengaluru, Karnataka 560037";
 
@@ -201,7 +203,14 @@ const SCREEN_BRANDS = [
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('tv');
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides'>(() => {
+  const [selectedLocationSlug, setSelectedLocationSlug] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('slug') || params.get('location') || 'indiranagar';
+    }
+    return 'indiranagar';
+  });
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides' | 'service-centers' | 'location'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get('view');
@@ -220,10 +229,15 @@ export default function App() {
         'sony-repair',
         'samsung-repair',
         'lg-repair',
-        'tech-guides'
+        'tech-guides',
+        'service-centers',
+        'location'
       ];
       if (urlView && validViews.includes(urlView)) {
         return urlView as any;
+      }
+      if (params.get('slug') || params.get('location')) {
+        return 'location';
       }
       if (params.get('action') === 'book') {
         return 'appointment-booking';
@@ -245,6 +259,7 @@ export default function App() {
   const [selectedInstallationType, setSelectedInstallationType] = useState<string | null>(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isLocationsOpen, setIsLocationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedService, setExpandedService] = useState<string | null>(null);
 
@@ -260,24 +275,168 @@ export default function App() {
 
   const [locationResults, setLocationResults] = useState<LocationResult | null>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const [showServiceAreaList, setShowServiceAreaList] = useState(false);
+  const [showServiceAreaList, setShowServiceAreaList] = useState(true);
 
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   
   useEffect(() => {
+    // Inject global JSON-LD LocalBusiness Schema Structured Data
+    const globalSchemaId = 'schema-org-localbusiness-global';
+    let scriptElem = document.getElementById(globalSchemaId) as HTMLScriptElement | null;
+
+    if (!scriptElem) {
+      scriptElem = document.createElement('script');
+      scriptElem.id = globalSchemaId;
+      scriptElem.type = 'application/ld+json';
+      document.head.appendChild(scriptElem);
+    }
+
+    const televisionRepairSchema = {
+      "@context": "https://schema.org",
+      "@type": "TelevisionRepairService",
+      "@id": "https://ipixelelectronics.com/#business",
+      "name": "ipixel electronics",
+      "alternateName": "Pixel Electronic",
+      "image": [
+        "https://ipixelelectronics.com/images/storefront.jpg",
+        "https://ipixelelectronics.com/images/logo.png"
+      ],
+      "url": "https://ipixelelectronics.com/",
+      "telephone": "+919513134313",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "#22, 3rd A Cross, Gururaja Layout, Doddanekundi",
+        "addressLocality": "Bengaluru",
+        "addressRegion": "Karnataka",
+        "postalCode": "560037",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 12.9693629,
+        "longitude": 77.6909871
+      },
+      "hasMap": "https://maps.google.com/maps?cid=12337121828717556837",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "09:30",
+          "closes": "21:00"
+        }
+      ],
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Bengaluru",
+          "sameAs": "https://en.wikipedia.org/wiki/Bangalore"
+        },
+        {
+          "@type": "Place",
+          "name": "Doddanekkundi"
+        },
+        {
+          "@type": "Place",
+          "name": "Marathahalli"
+        },
+        {
+          "@type": "Place",
+          "name": "Whitefield"
+        },
+        {
+          "@type": "Place",
+          "name": "Bellandur"
+        },
+        {
+          "@type": "Place",
+          "name": "Balagere"
+        },
+        {
+          "@type": "Place",
+          "name": "Varthur"
+        },
+        {
+          "@type": "Place",
+          "name": "Kadubeesanahalli"
+        },
+        {
+          "@type": "Place",
+          "name": "Hoodi"
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "TV Repair & Display Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Smart TV Screen & Display Panel Replacement",
+              "description": "Expert display panel and open-cell screen replacement for LED, OLED, and QLED TVs with up to 180 days warranty."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "TV Backlight Repair & LED Strip Replacement",
+              "description": "Fixing black/dark screen issues, dim displays, and backlight failure for all major TV brands."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Display Line Repair (Advanced COF Bonding)",
+              "description": "In-house bonding machine repair for horizontal/vertical lines and screen flickering."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Doorstep TV Repair Service in Bangalore",
+              "description": "In-home inspection, pickup, and doorstep repair service across Bangalore."
+            }
+          }
+        ]
+      }
+    };
+
+    scriptElem.textContent = JSON.stringify(televisionRepairSchema, null, 2);
+  }, []);
+
+  useEffect(() => {
     // Scroll to top when view changes
     window.scrollTo(0, 0);
-  }, [view]);
+  }, [view, selectedLocationSlug]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       if (view === 'home') {
         url.searchParams.delete('view');
+        url.searchParams.delete('slug');
       } else {
         url.searchParams.set('view', view);
       }
       
+      if (view === 'location') {
+        url.searchParams.set('slug', selectedLocationSlug);
+      } else {
+        url.searchParams.delete('slug');
+      }
+
       if (selectedGuideId && view === 'tech-guides') {
         url.searchParams.set('guide', selectedGuideId);
       } else {
@@ -287,7 +446,7 @@ export default function App() {
       
       window.history.pushState({}, '', url.toString());
     }
-  }, [view, selectedGuideId]);
+  }, [view, selectedLocationSlug, selectedGuideId]);
 
   const FAQ_ITEMS = [
     {
@@ -585,6 +744,60 @@ export default function App() {
                 <MapPin className="w-4 h-4 text-red-500" />
                 <span>Store Map</span>
               </button>
+
+              <div className="relative">
+                <button 
+                  onClick={() => setIsLocationsOpen(!isLocationsOpen)}
+                  onMouseEnter={() => setIsLocationsOpen(true)}
+                  className="flex items-center gap-1.5 text-[15px] font-semibold text-gray-500 hover:text-black transition-colors cursor-pointer"
+                >
+                  <span>Locations</span>
+                  <ChevronDown className={`w-4 h-4 opacity-50 transition-transform ${isLocationsOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isLocationsOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setIsLocationsOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        onMouseEnter={() => setIsLocationsOpen(true)}
+                        className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-gray-100 py-3 z-20 max-h-96 overflow-y-auto"
+                      >
+                        <div className="px-4 py-2 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">
+                          Bangalore Service Landing Pages
+                        </div>
+                        {Object.values(LOCATIONS_DATA).map((loc) => (
+                          <button
+                            key={loc.slug}
+                            onClick={() => {
+                              setSelectedLocationSlug(loc.slug);
+                              setView('location');
+                              setIsLocationsOpen(false);
+                            }}
+                            className="w-full text-left px-5 py-2.5 hover:bg-blue-50/60 transition-colors flex items-center justify-between group"
+                          >
+                            <div>
+                              <div className="text-sm font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                                {loc.name}
+                              </div>
+                              <div className="text-[10px] text-gray-400 font-medium">
+                                Pincode {loc.pincode} • {loc.landmarks[0]}
+                              </div>
+                            </div>
+                            <MapPin className="w-3.5 h-3.5 text-gray-300 group-hover:text-blue-500 transition-colors" />
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
  
               <div className="relative">
                 <button 
@@ -1976,6 +2189,15 @@ export default function App() {
           <BrandRepairPage setView={setView} brand="lg" />
         ) : view === 'tech-guides' ? (
           <TechnicalGuides setView={setView} selectedGuideId={selectedGuideId} setSelectedGuideId={setSelectedGuideId} />
+        ) : view === 'location' ? (
+          <LocationLandingPage 
+            locationSlug={selectedLocationSlug} 
+            setView={setView} 
+            onSelectLocation={(slug) => { 
+              setSelectedLocationSlug(slug); 
+              setView('location'); 
+            }} 
+          />
         ) : (
           <motion.main 
             key="screen-issue"
@@ -2145,12 +2367,22 @@ export default function App() {
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="flex flex-col gap-4 overflow-hidden"
+                    className="grid grid-cols-2 gap-x-2 gap-y-2 overflow-hidden"
                   >
-                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Marathahalli &amp; Whitefield</span></li>
-                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">HSR Layout &amp; Indiranagar</span></li>
-                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Bellandur &amp; Outer Ring Road</span></li>
-                    <li><span className="text-gray-500 text-sm font-medium cursor-default block">Varthur &amp; Carmelaram</span></li>
+                    {Object.values(LOCATIONS_DATA).map((loc) => (
+                      <li key={loc.slug}>
+                        <button
+                          onClick={() => {
+                            setSelectedLocationSlug(loc.slug);
+                            setView('location');
+                          }}
+                          className="text-gray-500 hover:text-blue-600 transition-colors text-xs font-semibold text-left flex items-center gap-1 group py-0.5"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 group-hover:scale-125 transition-transform shrink-0" />
+                          <span className="truncate">{loc.name}</span>
+                        </button>
+                      </li>
+                    ))}
                   </motion.ul>
                 )}
               </AnimatePresence>
@@ -2159,15 +2391,27 @@ export default function App() {
 
           {/* Dedicated local SEO Service Areas section */}
           <div className="mt-16 pt-8 border-t border-gray-100">
-            <div className="flex flex-col md:flex-row gap-4 items-start justify-between">
-              <div className="max-w-3xl">
+            <div className="flex flex-col md:flex-row gap-6 items-start justify-between">
+              <div className="max-w-4xl">
                 <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-red-500 shrink-0" />
-                  Primary Service Coverage In Bangalore
+                  Primary Multi-Location TV Repair Coverage in Bangalore
                 </h4>
-                <p className="text-gray-500 text-sm leading-relaxed font-semibold">
-                  Providing Doorstep TV Repair &amp; Pickup/Drop in Marathahalli, Whitefield, Hoodi, HSR Layout, Indiranagar, Mahadevapura, Bellandur, Varthur, Balagere, Carmelaram, Kadubeesanahalli, Gunjur Village and Outer Ring Road.
-                </p>
+                <div className="flex flex-wrap gap-2">
+                  {Object.values(LOCATIONS_DATA).map((loc) => (
+                    <button
+                      key={loc.slug}
+                      onClick={() => {
+                        setSelectedLocationSlug(loc.slug);
+                        setView('location');
+                      }}
+                      className="px-3 py-1 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 text-gray-600 text-xs font-bold rounded-lg border border-gray-200/80 transition-all active:scale-95 flex items-center gap-1"
+                    >
+                      <MapPin className="w-3 h-3 text-red-400 shrink-0" />
+                      <span>{loc.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
               <button 
                 onClick={() => setView('appointment-booking')}

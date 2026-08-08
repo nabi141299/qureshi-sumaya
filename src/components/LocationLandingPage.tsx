@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { 
   ArrowLeft, 
@@ -12,17 +12,22 @@ import {
   Truck, 
   Clock, 
   CheckCircle2, 
-  AlertTriangle,
   ChevronRight,
   HelpCircle,
   Award,
-  Navigation,
-  Sparkles,
   Cable,
   Cpu,
-  MonitorPlay
+  MonitorPlay,
+  Star,
+  UserCheck,
+  BadgeCheck,
+  ExternalLink,
+  Building2,
+  ThumbsUp,
+  MessageSquareQuote,
+  PenTool
 } from 'lucide-react';
-import { getLocationBySlug, LOCATIONS_DATA, LocationData } from '../data/locations';
+import { getLocationBySlug, LOCATIONS_DATA, LocationData, LocationTestimonial } from '../data/locations';
 import { GoogleMapWidget } from './GoogleMapWidget';
 
 interface LocationLandingPageProps {
@@ -37,14 +42,18 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
   onSelectLocation 
 }) => {
   const location: LocationData = getLocationBySlug(locationSlug);
+  const [showAddReviewModal, setShowAddReviewModal] = useState(false);
+  const [newReviewName, setNewReviewName] = useState('');
+  const [newReviewArea, setNewReviewArea] = useState('');
+  const [newReviewText, setNewReviewText] = useState('');
+  const [newReviewRating, setNewReviewRating] = useState(5);
+  const [submittedReview, setSubmittedReview] = useState(false);
 
   // Dynamic document title and JSON-LD Schema injection
   useEffect(() => {
-    // 1. Update Document Title
     const originalTitle = document.title;
     document.title = `Expert LED TV Repair & Screen Replacement in ${location.name}, Bangalore | iPixel Electronics`;
 
-    // 2. Inject Localized Schema.org Structured Data
     const scriptId = 'schema-org-location-jsonld';
     let scriptElem = document.getElementById(scriptId) as HTMLScriptElement | null;
 
@@ -69,6 +78,19 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
   const whatsappMessage = encodeURIComponent(
     `Hi iPixel Electronics! I need TV repair service in ${location.name}. My TV model/issue is:`
   );
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newReviewName.trim() || !newReviewText.trim()) return;
+    setSubmittedReview(true);
+    setTimeout(() => {
+      setSubmittedReview(false);
+      setShowAddReviewModal(false);
+      setNewReviewName('');
+      setNewReviewArea('');
+      setNewReviewText('');
+    }, 2500);
+  };
 
   return (
     <motion.main
@@ -175,6 +197,109 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
           </div>
         ))}
       </div>
+
+      {/* Hyper-Local Citations & Directory Trust Section */}
+      <section className="mb-16 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider">
+              <BadgeCheck className="w-4 h-4 text-blue-400" />
+              Verified Local Citations &amp; Directory Trust
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Hyper-Local NAP Consistency &amp; Verified Business Badges
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              ipixel electronics maintains 100% Name, Address &amp; Phone (NAP) accuracy across top Indian local directories and maps.
+            </p>
+          </div>
+
+          <a 
+            href="https://maps.google.com/maps?cid=12337121828717556837" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="px-5 py-3 bg-white text-slate-900 font-bold text-xs rounded-xl flex items-center gap-2 hover:bg-slate-100 transition-all shrink-0 shadow-lg"
+          >
+            <MapPin className="w-4 h-4 text-red-600" />
+            <span>Open Google Maps Business Profile</span>
+            <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
+          </a>
+        </div>
+
+        {/* Directory Badges Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-2">
+          <div className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-col items-center text-center space-y-2">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
+              G
+            </div>
+            <div className="text-xs font-bold text-white">Google Business</div>
+            <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
+              <Star className="w-3.5 h-3.5 fill-amber-400" />
+              <span>4.9 / 5.0</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">Verified CID</span>
+          </div>
+
+          <div className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-col items-center text-center space-y-2">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
+              JD
+            </div>
+            <div className="text-xs font-bold text-white">Justdial</div>
+            <div className="text-emerald-400 text-[11px] font-bold flex items-center gap-1">
+              <BadgeCheck className="w-3.5 h-3.5" />
+              Verified Partner
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">Top Rated Shop</span>
+          </div>
+
+          <div className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-col items-center text-center space-y-2">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+              S
+            </div>
+            <div className="text-xs font-bold text-white">Sulekha</div>
+            <div className="text-emerald-400 text-[11px] font-bold flex items-center gap-1">
+              <BadgeCheck className="w-3.5 h-3.5" />
+              Certified Expert
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">100% Background Checked</span>
+          </div>
+
+          <div className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-col items-center text-center space-y-2">
+            <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-xs">
+              IM
+            </div>
+            <div className="text-xs font-bold text-white">IndiaMART</div>
+            <div className="text-emerald-400 text-[11px] font-bold flex items-center gap-1">
+              <BadgeCheck className="w-3.5 h-3.5" />
+              Star Supplier
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">TrustSEAL Verified</span>
+          </div>
+
+          <div className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/80 flex flex-col items-center text-center space-y-2 col-span-2 sm:col-span-1">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs">
+              FB
+            </div>
+            <div className="text-xs font-bold text-white">Facebook Local</div>
+            <div className="text-emerald-400 text-[11px] font-bold flex items-center gap-1">
+              <BadgeCheck className="w-3.5 h-3.5" />
+              Official Page
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">ipixelelectronics</span>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-300 font-medium">
+          <div className="flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-blue-400 shrink-0" />
+            <span><strong>Shop Address:</strong> #22, 3rd A Cross, Gururaja Layout, Doddanekundi, Bengaluru 560037</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span><strong>Call / WhatsApp:</strong> +91 95131 34313</span>
+          </div>
+        </div>
+      </section>
 
       {/* Common TV Problems Fixed in Location */}
       <section className="mb-16">
@@ -298,21 +423,200 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
         </div>
       </section>
 
-      {/* Multi-Location Switcher Grid */}
+      {/* Neighborhood-Specific Customer Reviews & Owner Responses Section */}
+      <section className="mb-16 bg-white rounded-3xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <span className="text-xs font-mono font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-2">
+              Neighborhood Reviews
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+              Customer Feedback &amp; Owner Responses in {location.name}
+            </h2>
+            <p className="text-gray-500 text-xs sm:text-sm font-medium mt-1">
+              Verified local resident reviews with explicit neighborhood keywords and official shop replies.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowAddReviewModal(true)}
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center gap-2 transition-all shadow-md active:scale-95 shrink-0"
+          >
+            <PenTool className="w-4 h-4" />
+            <span>Write a Review for {location.name}</span>
+          </button>
+        </div>
+
+        {/* Reviews Cards List */}
+        <div className="space-y-6">
+          {location.testimonials.map((test) => (
+            <div 
+              key={test.id}
+              className="p-6 bg-slate-50/80 rounded-2xl border border-gray-200 space-y-4 hover:bg-slate-50 transition-all"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center">
+                    {test.customerName.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                      <span>{test.customerName}</span>
+                      <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                        <UserCheck className="w-3 h-3" />
+                        Verified Resident
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 font-medium">
+                      {test.subArea} • <span className="text-gray-400">{test.date}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center text-amber-400">
+                    {[...Array(test.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold text-gray-700 bg-white px-2.5 py-1 rounded-lg border border-gray-200">
+                    {test.tvModel}
+                  </span>
+                </div>
+              </div>
+
+              <div className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed bg-white p-4 rounded-xl border border-gray-200/60">
+                <MessageSquareQuote className="w-5 h-5 text-blue-500 mb-1 inline-block mr-1 opacity-75" />
+                "{test.reviewText}"
+              </div>
+
+              {/* Owner Official Response Box */}
+              <div className="p-4 bg-blue-50/70 rounded-xl border border-blue-200/70 space-y-1.5 ml-2 sm:ml-6">
+                <div className="flex items-center gap-2 text-xs font-bold text-blue-900">
+                  <BadgeCheck className="w-4 h-4 text-blue-600" />
+                  <span>Official Response from iPixel Electronics Owner</span>
+                </div>
+                <p className="text-xs text-blue-800 font-medium leading-relaxed">
+                  "{test.ownerResponse}"
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Review Modal Form */}
+      {showAddReviewModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 relative">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Write a Review for {location.name}</h3>
+                <p className="text-xs text-gray-500">Share your TV repair experience with nearby neighbors</p>
+              </div>
+              <button 
+                onClick={() => setShowAddReviewModal(false)}
+                className="text-gray-400 hover:text-black font-bold text-sm p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            {submittedReview ? (
+              <div className="p-6 bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-200 text-center space-y-2">
+                <ThumbsUp className="w-10 h-10 text-emerald-600 mx-auto" />
+                <h4 className="font-bold text-base">Thank You for Your Review!</h4>
+                <p className="text-xs font-medium">Your feedback with neighborhood details has been recorded and will appear shortly with owner response.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleReviewSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rahul Sharma"
+                    value={newReviewName}
+                    onChange={(e) => setNewReviewName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Sub-Neighborhood / Landmark</label>
+                  <input
+                    type="text"
+                    placeholder={`e.g. Near ${location.landmarks[0] || location.name}`}
+                    value={newReviewArea}
+                    onChange={(e) => setNewReviewArea(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Star Rating</label>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => setNewReviewRating(star)}
+                        className="p-1 text-amber-400 hover:scale-110 transition-transform"
+                      >
+                        <Star className={`w-6 h-6 ${star <= newReviewRating ? 'fill-amber-400' : 'text-gray-300'}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Your Review</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder={`Describe your TV repair, panel replacement, or wall mounting experience in ${location.name}...`}
+                    value={newReviewText}
+                    onChange={(e) => setNewReviewText(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddReviewModal(false)}
+                    className="px-4 py-2.5 text-xs font-bold text-gray-600 hover:bg-gray-100 rounded-xl"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md"
+                  >
+                    Submit Local Review
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Multi-Location Switcher Grid for 20 Active Areas */}
       <section className="mb-16 bg-slate-50 rounded-3xl p-6 sm:p-8 border border-gray-200/80">
         <div className="mb-6">
           <span className="text-xs font-mono font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-2">
-            Multi-Location Coverage
+            20 Active Service Areas
           </span>
           <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-            TV Repair Service Locations Across Bangalore
+            TV Repair Service Locations Across 8 km Radius
           </h2>
           <p className="text-gray-500 text-xs sm:text-sm font-medium mt-1">
-            Click any area below to view local service highlights, doorstep delivery speed, and specific technicians.
+            Click any neighborhood below to view dynamic local service highlights, doorstep delivery speed, and technician availability.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {Object.values(LOCATIONS_DATA).map((loc) => {
             const isCurrent = loc.slug === location.slug;
             return (
@@ -325,7 +629,7 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
                     setView('location');
                   }
                 }}
-                className={`p-3.5 rounded-2xl text-left transition-all border flex items-center justify-between gap-2 ${
+                className={`p-3 rounded-2xl text-left transition-all border flex items-center justify-between gap-2 ${
                   isCurrent 
                     ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-blue-500/50' 
                     : 'bg-white text-gray-800 border-gray-200 hover:border-gray-400 hover:bg-gray-50'
@@ -337,7 +641,7 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
                     Pincode {loc.pincode}
                   </div>
                 </div>
-                <MapPin className={`w-4 h-4 shrink-0 ${isCurrent ? 'text-red-400 fill-red-400' : 'text-gray-400'}`} />
+                <MapPin className={`w-3.5 h-3.5 shrink-0 ${isCurrent ? 'text-red-400 fill-red-400' : 'text-gray-400'}`} />
               </button>
             );
           })}

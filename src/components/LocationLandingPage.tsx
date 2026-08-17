@@ -662,7 +662,10 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
           </p>
         </div>
 
-        <GoogleMapWidget title={`Doddanekundi Main Workshop Serving ${location.name}`} />
+        <GoogleMapWidget 
+          title={`Doddanekundi Main Workshop Serving ${location.name}`} 
+          onBookAppointment={() => setView('appointment-booking')} 
+        />
       </section>
 
       {/* Localized FAQs */}

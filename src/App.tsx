@@ -1561,7 +1561,7 @@ export default function App() {
                 </p>
               </div>
 
-              <GoogleMapWidget />
+              <GoogleMapWidget onBookAppointment={() => setView('appointment-booking')} />
             </section>
 
             {/* FAQ Section */}
@@ -1629,7 +1629,10 @@ export default function App() {
 
             {/* Embedded Interactive Google Map */}
             <div className="mb-8">
-              <GoogleMapWidget title="Store Map & Directions - Doddanekundi, Bengaluru" />
+              <GoogleMapWidget 
+                title="Store Map & Directions - Doddanekundi, Bengaluru" 
+                onBookAppointment={() => setView('appointment-booking')} 
+              />
             </div>
 
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">

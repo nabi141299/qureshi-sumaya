@@ -49,6 +49,9 @@ import {
   Sparkles,
   Calendar,
   Check,
+  Route as RouteIcon,
+  Car,
+  Bus,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './components/ServiceLandingPages';
@@ -56,6 +59,7 @@ import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 import { TechnicalGuides } from './components/TechnicalGuides';
 import { OperatingHoursCard } from './components/OperatingHoursCard';
 import { GoogleMapWidget } from './components/GoogleMapWidget';
+import { CommuteDirectionsMap } from './components/CommuteDirectionsMap';
 import { LocationLandingPage } from './components/LocationLandingPage';
 import { LOCATIONS_DATA } from './data/locations';
 
@@ -210,7 +214,7 @@ export default function App() {
     }
     return 'indiranagar';
   });
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides' | 'service-centers' | 'location'>(() => {
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides' | 'service-centers' | 'location' | 'directions'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get('view');
@@ -231,7 +235,8 @@ export default function App() {
         'lg-repair',
         'tech-guides',
         'service-centers',
-        'location'
+        'location',
+        'directions'
       ];
       if (urlView && validViews.includes(urlView)) {
         return urlView as any;
@@ -278,6 +283,13 @@ export default function App() {
   const [showServiceAreaList, setShowServiceAreaList] = useState(true);
 
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [gmpQuotaExceeded, setGmpQuotaExceeded] = useState(false);
+
+  useEffect(() => {
+    const handleQuota = () => setGmpQuotaExceeded(true);
+    window.addEventListener('gmp-quota-exceeded', handleQuota);
+    return () => window.removeEventListener('gmp-quota-exceeded', handleQuota);
+  }, []);
   
   useEffect(() => {
     // Inject global JSON-LD LocalBusiness Schema Structured Data
@@ -593,6 +605,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
+      {/* Google Maps Quota Exceeded Notification Banner (Demo Key) */}
+      {gmpQuotaExceeded && (
+        <div className="bg-amber-50 border-b border-amber-200 text-amber-900 px-4 py-2.5 text-xs md:text-sm text-center sticky top-0 z-50 shadow-sm">
+          <span>
+            Google Maps Platform quota reached. If you are the app owner, visit{' '}
+            <a
+              href="https://developers.google.com/maps/ai/ai-studio?utm_campaign=gmp_mcp_codeassist_v1_aistudio#quota_exceeded_errors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-semibold text-amber-950 hover:text-amber-800"
+            >
+              maps developer site
+            </a>{' '}
+            for instructions to update your account.
+          </span>
+        </div>
+      )}
+
       {/* Top Banner Ribbon - Always Visible Front Contact Bar */}
       <div className="bg-slate-900 text-white border-b border-slate-800 text-xs py-2 px-4 sm:px-6 z-50">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
@@ -743,6 +773,16 @@ export default function App() {
               >
                 <MapPin className="w-4 h-4 text-red-500" />
                 <span>Store Map</span>
+              </button>
+
+              <button 
+                onClick={() => setView('directions')}
+                className={`text-[15px] font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                  view === 'directions' ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'
+                }`}
+              >
+                <RouteIcon className="w-4 h-4 text-blue-600" />
+                <span>Directions &amp; Commute</span>
               </button>
 
               <div className="relative">
@@ -1000,6 +1040,18 @@ export default function App() {
                       <div>
                         <div className="text-sm font-bold text-blue-950">TV Troubleshooting</div>
                         <div className="text-xs text-blue-600 font-semibold">24 diagnostic guides</div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => { setView('directions'); setIsMobileMenuOpen(false); }}
+                      className="flex items-center gap-4 p-4 bg-emerald-50 text-emerald-950 rounded-2xl text-left border border-emerald-100"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                        <RouteIcon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-emerald-950">Directions &amp; Travel Times</div>
+                        <div className="text-xs text-emerald-700">Driving, BMTC, Walking, Cycling</div>
                       </div>
                     </button>
                     <button 
@@ -2201,6 +2253,71 @@ export default function App() {
               setView('location'); 
             }} 
           />
+        ) : view === 'directions' ? (
+          <motion.main 
+            key="directions"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className="max-w-7xl mx-auto px-4 sm:px-6 py-12"
+          >
+            {/* Header & Back Button */}
+            <div className="flex items-center gap-4 mb-8">
+              <button 
+                onClick={() => setView('home')}
+                className="w-10 h-10 rounded-2xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 hover:text-black transition-all active:scale-95 cursor-pointer"
+                title="Back to Home"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div>
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                  <span className="cursor-pointer hover:text-black" onClick={() => setView('home')}>Home</span>
+                  <span>/</span>
+                  <span className="text-blue-600">Travel Times &amp; Directions</span>
+                </div>
+                <h1 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight mt-1">
+                  Estimated Travel Times &amp; Directions
+                </h1>
+              </div>
+            </div>
+
+            {/* Commute Directions Map Component */}
+            <CommuteDirectionsMap onBookPickup={() => setView('appointment-booking')} />
+
+            {/* Explanatory Info Cards below Map */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                  <Car className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-gray-900 mb-2">Driving &amp; Two-Wheeler Routes</h3>
+                <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                  Optimized vehicle routing via Outer Ring Road, Whitefield Main Road, and Varthur Road with real-time traffic condition estimates.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+                  <Bus className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-gray-900 mb-2">BMTC Bus &amp; Metro Transit</h3>
+                <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                  Direct connections to Kundalahalli Metro Station (Purple Line) and major BMTC bus bays across Marathahalli &amp; KR Puram.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+                  <Truck className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-gray-900 mb-2">Doorstep Pickup Service</h3>
+                <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                  Too busy to travel? We offer free doorstep pickup &amp; delivery of your TV across our entire 8 km service radius.
+                </p>
+              </div>
+            </div>
+          </motion.main>
         ) : (
           <motion.main 
             key="screen-issue"

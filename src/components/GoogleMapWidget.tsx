@@ -1,5 +1,18 @@
-import React from 'react';
-import { MapPin, Navigation, ExternalLink, Phone, Clock, ShieldCheck, Calendar, MessageCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  MapPin, 
+  Navigation, 
+  ExternalLink, 
+  Phone, 
+  Clock, 
+  ShieldCheck, 
+  Calendar, 
+  MessageCircle, 
+  CheckCircle2, 
+  Route as RouteIcon,
+  Compass
+} from 'lucide-react';
+import { CommuteDirectionsMap } from './CommuteDirectionsMap';
 
 export interface LocationConfig {
   title: string;
@@ -47,14 +60,18 @@ interface GoogleMapWidgetProps {
   className?: string;
   compact?: boolean;
   onBookAppointment?: () => void;
+  defaultTab?: 'locator' | 'directions';
 }
 
 export const GoogleMapWidget: React.FC<GoogleMapWidgetProps> = ({
   title = "Our Google Maps Location & Store Locator",
   className = "",
   compact = false,
-  onBookAppointment
+  onBookAppointment,
+  defaultTab = 'directions'
 }) => {
+  const [activeTab, setActiveTab] = useState<'locator' | 'directions'>(defaultTab);
+  
   const shopName = "ipixel electronics";
   const address = "#22, 3rd A Cross Rd, gururaja layout, doddanekundi, Doddanekkundi, Bengaluru, Karnataka 560037, India";
   const placeId = "ChIJT02sErITrjsRZXRtN_BCNqs";
@@ -69,129 +86,174 @@ export const GoogleMapWidget: React.FC<GoogleMapWidgetProps> = ({
   const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${placeId}`;
 
   return (
-    <div className={`bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden ${className}`}>
-      {/* Header bar */}
-      <div className="p-5 sm:p-6 bg-slate-900 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center shrink-0">
-            <MapPin className="w-5 h-5 text-red-400 fill-red-400/20" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400">
-                Verified Google Business
-              </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
-                ★ 4.9 Rating
-              </span>
-            </div>
-            <h3 className="text-lg font-black tracking-tight text-white mt-0.5">
-              {title}
-            </h3>
-          </div>
+    <div className={`space-y-4 ${className}`}>
+      {/* Tab Switcher */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-2 bg-slate-100 rounded-2xl border border-gray-200">
+        <div className="flex items-center gap-1.5 p-1 bg-white rounded-xl shadow-xs">
+          <button
+            onClick={() => setActiveTab('directions')}
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              activeTab === 'directions'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <RouteIcon className="w-4 h-4" />
+            <span>Travel Times &amp; Directions</span>
+            <span className="text-[10px] py-0.5 px-1.5 rounded-full font-bold bg-white/20 text-white">
+              Live Routes
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('locator')}
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              activeTab === 'locator'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Store Locator &amp; Street Map</span>
+          </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-          {onBookAppointment ? (
-            <button
-              onClick={onBookAppointment}
-              className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95 cursor-pointer"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Book Appointment</span>
-            </button>
-          ) : (
-            <a
-              href="https://ipixelelectronics.com//?view=appointment-booking"
-              className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Book Appointment</span>
-            </a>
-          )}
-          <a
-            href={googleMapsDirectionsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
-          >
-            <Navigation className="w-3.5 h-3.5 fill-white" />
-            <span>Get Directions</span>
-          </a>
-          <a
-            href={googleMapsPlaceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 border border-slate-700 active:scale-95"
-          >
-            <span>Google Maps</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+        <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-gray-500 pr-2">
+          <Compass className="w-3.5 h-3.5 text-blue-600" />
+          <span>Interactive navigation powered by Google Maps</span>
         </div>
       </div>
 
-      {/* Map Iframe Container */}
-      <div className="relative w-full bg-slate-100 min-h-[340px] sm:min-h-[420px]">
-        <iframe
-          title="iPixel Electronics Google Maps Locator"
-          src={mapEmbedUrl}
-          width="100%"
-          height="100%"
-          className="absolute inset-0 w-full h-full border-0"
-          loading="lazy"
-          allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
-
-      {/* Address & Quick Info Banner */}
-      {!compact && (
-        <div className="p-5 sm:p-6 bg-slate-50 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-semibold">
-          <div className="flex items-start gap-3.5 md:col-span-2">
-            <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
-              <MapPin className="w-4 h-4 text-red-500" />
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">Workshop Location (Doddanekundi)</span>
-              <p className="text-gray-900 font-bold leading-relaxed text-[13px]">
-                {address}
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Place ID: {placeId}
-                </span>
-                <span className="text-[11px] text-gray-500 font-mono">
-                  ({lat.toFixed(5)}, {lng.toFixed(5)})
-                </span>
+      {activeTab === 'directions' ? (
+        <CommuteDirectionsMap 
+          onBookPickup={onBookAppointment}
+        />
+      ) : (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+          {/* Header bar */}
+          <div className="p-5 sm:p-6 bg-slate-900 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center shrink-0">
+                <MapPin className="w-5 h-5 text-red-400 fill-red-400/20" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400">
+                    Verified Google Business
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
+                    ★ 4.9 Rating
+                  </span>
+                </div>
+                <h3 className="text-lg font-black tracking-tight text-white mt-0.5">
+                  {title}
+                </h3>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-col justify-between gap-2.5 border-t md:border-t-0 md:border-l border-gray-200 pt-3.5 md:pt-0 md:pl-5">
-            <div className="flex items-center gap-2 text-gray-700">
-              <Clock className="w-4 h-4 text-blue-600 shrink-0" />
-              <span>Open Daily: <strong>9:30 AM - 9:00 PM</strong></span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Helpline: <a href="tel:+919513134313" className="font-mono font-bold text-blue-600 hover:underline">+91 95131 34313</a></span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />
-              <span>Doorstep Pickup &amp; Drop (Within 8 KM)</span>
-            </div>
-            <div className="pt-1 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+              {onBookAppointment ? (
+                <button
+                  onClick={onBookAppointment}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95 cursor-pointer"
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Book Appointment</span>
+                </button>
+              ) : (
+                <a
+                  href="https://ipixelelectronics.com//?view=appointment-booking"
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Book Appointment</span>
+                </a>
+              )}
               <a
-                href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics%2C%20I%20want%20to%20inquire%20about%20TV%20repair%20and%20service%20location."
+                href={googleMapsDirectionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2 bg-[#25d366] hover:bg-[#20ba56] text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                className="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
               >
-                <MessageCircle className="w-3.5 h-3.5 fill-white" />
-                <span>Chat with Workshop</span>
+                <Navigation className="w-3.5 h-3.5 fill-white" />
+                <span>Get Directions</span>
+              </a>
+              <a
+                href={googleMapsPlaceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 border border-slate-700 active:scale-95"
+              >
+                <span>Google Maps</span>
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
+
+          {/* Map Iframe Container */}
+          <div className="relative w-full bg-slate-100 min-h-[340px] sm:min-h-[420px]">
+            <iframe
+              title="iPixel Electronics Google Maps Locator"
+              src={mapEmbedUrl}
+              width="100%"
+              height="100%"
+              className="absolute inset-0 w-full h-full border-0"
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+
+          {/* Address & Quick Info Banner */}
+          {!compact && (
+            <div className="p-5 sm:p-6 bg-slate-50 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-5 text-xs font-semibold">
+              <div className="flex items-start gap-3.5 md:col-span-2">
+                <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                  <MapPin className="w-4 h-4 text-red-500" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-0.5">Workshop Location (Doddanekundi)</span>
+                  <p className="text-gray-900 font-bold leading-relaxed text-[13px]">
+                    {address}
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Place ID: {placeId}
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-mono">
+                      ({lat.toFixed(5)}, {lng.toFixed(5)})
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-between gap-2.5 border-t md:border-t-0 md:border-l border-gray-200 pt-3.5 md:pt-0 md:pl-5">
+                <div className="flex items-center gap-2 text-gray-700">
+                  <Clock className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Open Daily: <strong>9:30 AM - 9:00 PM</strong></span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-700">
+                  <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Helpline: <a href="tel:+919513134313" className="font-mono font-bold text-blue-600 hover:underline">+91 95131 34313</a></span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-700">
+                  <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />
+                  <span>Doorstep Pickup &amp; Drop (Within 8 KM)</span>
+                </div>
+                <div className="pt-1 flex items-center gap-2">
+                  <a
+                    href="https://wa.me/919513134313?text=Hi%20iPixel%20Electronics%2C%20I%20want%20to%20inquire%20about%20TV%20repair%20and%20service%20location."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 bg-[#25d366] hover:bg-[#20ba56] text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                    <span>Chat with Workshop</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

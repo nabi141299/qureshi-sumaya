@@ -49,18 +49,15 @@ import {
   Sparkles,
   Calendar,
   Check,
-  Route as RouteIcon,
-  Car,
-  Bus,
+  ClipboardCheck,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScreenRepairPage, TvInstallationPage, BrandRepairPage } from './components/ServiceLandingPages';
 import { GoogleReviewsWidget } from './components/GoogleReviewsWidget';
 import { TechnicalGuides } from './components/TechnicalGuides';
 import { OperatingHoursCard } from './components/OperatingHoursCard';
-import { GoogleMapWidget } from './components/GoogleMapWidget';
-import { CommuteDirectionsMap } from './components/CommuteDirectionsMap';
 import { LocationLandingPage } from './components/LocationLandingPage';
+import { RepairTracker } from './components/RepairTracker';
 import { LOCATIONS_DATA } from './data/locations';
 
 const SHOP_ADDRESS = "ipixel electronics, #22, 3rd A Cross Rd, gururaja layout, doddanekundi, Doddanekkundi, Bengaluru, Karnataka 560037";
@@ -214,7 +211,7 @@ export default function App() {
     }
     return 'indiranagar';
   });
-  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides' | 'service-centers' | 'location' | 'directions'>(() => {
+  const [view, setView] = useState<'home' | 'diagnosis' | 'screen-issue' | 'installation-type' | 'tv-size-selection' | 'screen-brands' | 'wall-mount-selection' | 'appointment-booking' | 'instant-quote' | 'screen-repair' | 'tv-installation' | 'sony-repair' | 'samsung-repair' | 'lg-repair' | 'tech-guides' | 'service-centers' | 'location'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get('view');
@@ -235,8 +232,7 @@ export default function App() {
         'lg-repair',
         'tech-guides',
         'service-centers',
-        'location',
-        'directions'
+        'location'
       ];
       if (urlView && validViews.includes(urlView)) {
         return urlView as any;
@@ -603,6 +599,24 @@ export default function App() {
     }
   };
 
+  const scrollToRepairTracker = () => {
+    if (view !== 'home') {
+      setView('home');
+      setTimeout(() => {
+        const el = document.getElementById('repair-tracker');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+    } else {
+      const el = document.getElementById('repair-tracker');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#fcfcfc] text-[#1a1a1a] font-sans selection:bg-black selection:text-white">
       {/* Google Maps Quota Exceeded Notification Banner (Demo Key) */}
@@ -768,21 +782,11 @@ export default function App() {
               </button>
 
               <button 
-                onClick={() => setView('service-centers')}
-                className="text-[15px] font-semibold text-gray-500 hover:text-black transition-colors cursor-pointer flex items-center gap-1.5"
+                onClick={scrollToRepairTracker}
+                className="text-[15px] font-semibold text-emerald-700 hover:text-emerald-900 transition-colors cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80"
               >
-                <MapPin className="w-4 h-4 text-red-500" />
-                <span>Store Map</span>
-              </button>
-
-              <button 
-                onClick={() => setView('directions')}
-                className={`text-[15px] font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
-                  view === 'directions' ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-black'
-                }`}
-              >
-                <RouteIcon className="w-4 h-4 text-blue-600" />
-                <span>Directions &amp; Commute</span>
+                <ClipboardCheck className="w-4 h-4 text-emerald-600" />
+                <span>Track Repair</span>
               </button>
 
               <div className="relative">
@@ -1043,15 +1047,15 @@ export default function App() {
                       </div>
                     </button>
                     <button 
-                      onClick={() => { setView('directions'); setIsMobileMenuOpen(false); }}
-                      className="flex items-center gap-4 p-4 bg-emerald-50 text-emerald-950 rounded-2xl text-left border border-emerald-100"
+                      onClick={scrollToRepairTracker}
+                      className="flex items-center gap-4 p-4 bg-emerald-50 text-emerald-950 rounded-2xl text-left border border-emerald-200 shadow-sm"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
-                        <RouteIcon className="w-5 h-5" />
+                      <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                        <ClipboardCheck className="w-5 h-5" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-emerald-950">Directions &amp; Travel Times</div>
-                        <div className="text-xs text-emerald-700">Driving, BMTC, Walking, Cycling</div>
+                        <div className="text-sm font-bold text-emerald-950">Track Repair Status</div>
+                        <div className="text-xs text-emerald-700 font-medium">Enter ticket # for real-time progress</div>
                       </div>
                     </button>
                     <button 
@@ -1170,6 +1174,14 @@ export default function App() {
                   <MessageCircle className="w-4 h-4 fill-white text-[#25d366]" />
                   <span>WhatsApp Us</span>
                 </a>
+                <button
+                  type="button"
+                  onClick={scrollToRepairTracker}
+                  className="px-5 py-4 bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold text-sm rounded-2xl flex items-center justify-center gap-2 transition-all border border-slate-700/80 active:scale-95 cursor-pointer"
+                >
+                  <ClipboardCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Track Ticket</span>
+                </button>
               </div>
             </div>
 
@@ -1183,101 +1195,123 @@ export default function App() {
                 <h2 className="text-xl font-bold mb-6 tracking-tight">What are you looking for?</h2>
                 
                 {/* Category Tabs */}
-                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-6">
-                  {CATEGORIES.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      className={`flex items-center gap-1 sm:gap-1.5 px-1 sm:px-3 py-2.5 rounded-xl text-[10px] sm:text-[12px] font-bold transition-all duration-300 justify-center ${
-                        activeCategory === cat.id
-                          ? 'bg-black text-white shadow-lg shadow-black/10 scale-[1.02]'
-                          : 'bg-white text-gray-400 border border-gray-100 hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className={activeCategory === cat.id ? 'text-white' : 'text-gray-300'}>
-                        {React.cloneElement(cat.icon as React.ReactElement, { className: 'w-3.5 h-3.5 sm:w-4 h-4' })}
-                      </span>
-                      {cat.name}
-                    </button>
-                  ))}
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mb-6 p-1 bg-gray-50/80 rounded-2xl border border-gray-100/80">
+                  {CATEGORIES.map((cat) => {
+                    const isActive = activeCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setActiveCategory(cat.id)}
+                        className={`relative flex items-center gap-1 sm:gap-1.5 px-1 sm:px-3 py-2.5 rounded-xl text-[10px] sm:text-[12px] font-bold transition-all duration-200 justify-center outline-none select-none ${
+                          isActive
+                            ? 'text-white'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-white/60'
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="activeCategoryHighlight"
+                            className="absolute inset-0 bg-black rounded-xl shadow-md shadow-black/15"
+                            transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                          />
+                        )}
+                        <span className={`relative z-10 transition-colors duration-200 ${isActive ? 'text-white' : 'text-gray-400'}`}>
+                          {React.cloneElement(cat.icon as React.ReactElement, { className: 'w-3.5 h-3.5 sm:w-4 h-4' })}
+                        </span>
+                        <span className="relative z-10 transition-colors duration-200">
+                          {cat.name}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {/* Service Grid */}
-                <div className={`${activeCategory === 'tv' ? 'grid grid-cols-3 gap-y-6 gap-x-2 sm:gap-y-8 sm:gap-x-4' : 'flex flex-col gap-4'} mb-8`}>
-                  {(activeCategory === 'tv' ? TV_SERVICES : 
-                    activeCategory === 'mobile' ? MOBILE_SERVICES :
-                    activeCategory === 'laptop' ? LAPTOP_SERVICES :
-                    TABLET_SERVICES).map((service, i) => (
-                    <div key={i} className={activeCategory === 'tv' ? '' : 'w-full'}>
-                      {activeCategory === 'tv' ? (
-                        <button 
-                          onClick={() => handleServiceClick(service.name)}
-                          className="flex flex-col items-center text-center group transition-transform active:scale-95 w-full"
-                        >
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-[1rem] sm:rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-gray-100 transition-all duration-300">
-                            <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300 scale-90 sm:scale-100">
-                              {service.icon}
-                            </div>
-                          </div>
-                          <span className="text-[10px] sm:text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
-                            {service.name}
-                          </span>
-                        </button>
-                      ) : (
-                        <div className="flex flex-col gap-3">
+                {/* Service Grid with Subtle Smooth-Fade Transition */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeCategory}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={`${activeCategory === 'tv' ? 'grid grid-cols-3 gap-y-6 gap-x-2 sm:gap-y-8 sm:gap-x-4' : 'flex flex-col gap-4'} mb-8 min-h-[160px]`}
+                  >
+                    {(activeCategory === 'tv' ? TV_SERVICES : 
+                      activeCategory === 'mobile' ? MOBILE_SERVICES :
+                      activeCategory === 'laptop' ? LAPTOP_SERVICES :
+                      TABLET_SERVICES).map((service, i) => (
+                      <div key={i} className={activeCategory === 'tv' ? '' : 'w-full'}>
+                        {activeCategory === 'tv' ? (
                           <button 
                             onClick={() => handleServiceClick(service.name)}
-                            className={`w-full bg-[#f8f9fa] rounded-[2rem] p-5 border transition-all duration-300 ${
-                              expandedService === service.name ? 'border-black shadow-md' : 'border-gray-100/50 shadow-sm'
-                            }`}
+                            className="flex flex-col items-center text-center group transition-transform active:scale-95 w-full"
                           >
-                            <div className="flex items-center gap-4">
-                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm transition-colors ${
-                                expandedService === service.name ? 'bg-black text-white' : 'bg-white text-black'
-                              }`}>
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-[1rem] sm:rounded-[1.25rem] bg-[#f8f9fa] flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-gray-100 transition-all duration-300">
+                              <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300 scale-90 sm:scale-100">
                                 {service.icon}
                               </div>
-                              <div className="text-left">
-                                <h3 className="text-[15px] font-bold text-gray-900 leading-tight">{service.name}</h3>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Advanced Repair</p>
-                              </div>
                             </div>
+                            <span className="text-[10px] sm:text-[12px] font-bold text-gray-500 leading-tight group-hover:text-black transition-colors">
+                              {service.name}
+                            </span>
                           </button>
-
-                          <AnimatePresence>
-                            {expandedService === service.name && (
-                              <motion.div 
-                                initial={{ opacity: 0, height: 0, y: -10 }}
-                                animate={{ opacity: 1, height: 'auto', y: 0 }}
-                                exit={{ opacity: 0, height: 0, y: -10 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="grid grid-cols-2 gap-3 pt-1">
-                                  <a 
-                                    href="https://wa.me/919513134313" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-[#25d366]/20 hover:scale-[1.02] active:scale-95 transition-all"
-                                  >
-                                    <MessageCircle className="w-4 h-4 fill-current" />
-                                    WhatsApp
-                                  </a>
-                                  <a 
-                                    href="tel:+919513134313"
-                                    className="flex items-center justify-center gap-2 py-3.5 bg-black text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-black/10 hover:scale-[1.02] active:scale-95 transition-all"
-                                  >
-                                    <Phone className="w-4 h-4 text-blue-400 fill-blue-400" />
-                                    Call Now
-                                  </a>
+                        ) : (
+                          <div className="flex flex-col gap-3">
+                            <button 
+                              onClick={() => handleServiceClick(service.name)}
+                              className={`w-full bg-[#f8f9fa] rounded-[2rem] p-5 border transition-all duration-300 ${
+                                expandedService === service.name ? 'border-black shadow-md' : 'border-gray-100/50 shadow-sm'
+                              }`}
+                            >
+                              <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm transition-colors ${
+                                  expandedService === service.name ? 'bg-black text-white' : 'bg-white text-black'
+                                }`}>
+                                  {service.icon}
                                 </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                                <div className="text-left">
+                                  <h3 className="text-[15px] font-bold text-gray-900 leading-tight">{service.name}</h3>
+                                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Advanced Repair</p>
+                                </div>
+                              </div>
+                            </button>
+
+                            <AnimatePresence>
+                              {expandedService === service.name && (
+                                <motion.div 
+                                  initial={{ opacity: 0, height: 0, y: -10 }}
+                                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                                  exit={{ opacity: 0, height: 0, y: -10 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="grid grid-cols-2 gap-3 pt-1">
+                                    <a 
+                                      href="https://wa.me/919513134313" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="flex items-center justify-center gap-2 py-3.5 bg-[#25d366] text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-[#25d366]/20 hover:scale-[1.02] active:scale-95 transition-all"
+                                    >
+                                      <MessageCircle className="w-4 h-4 fill-current" />
+                                      WhatsApp
+                                    </a>
+                                    <a 
+                                      href="tel:+919513134313"
+                                      className="flex items-center justify-center gap-2 py-3.5 bg-black text-white rounded-2xl text-[12px] font-bold shadow-lg shadow-black/10 hover:scale-[1.02] active:scale-95 transition-all"
+                                    >
+                                      <Phone className="w-4 h-4 text-blue-400 fill-blue-400" />
+                                      Call Now
+                                    </a>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
 
                 {/* Book Appointment Button */}
                 <button 
@@ -1599,22 +1633,10 @@ export default function App() {
               </div>
             </section>
 
-            {/* Google Maps Business Location Section */}
-            <section className="mt-28">
-              <div className="mb-6">
-                <span className="text-xs font-mono font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-2">
-                  Interactive Google Maps Location
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight leading-tight">
-                  iPixel Electronics Service Center Location
-                </h2>
-                <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed mt-1">
-                  Visit our workshop in Doddanekundi, Bengaluru for walk-in LED TV repairs, or get direct directions to our store.
-                </p>
-              </div>
-
-              <GoogleMapWidget onBookAppointment={() => setView('appointment-booking')} />
-            </section>
+            {/* Live Repair Status Tracker Section */}
+            <div id="repair-tracker" className="scroll-mt-24">
+              <RepairTracker onBookAppointment={() => setView('appointment-booking')} />
+            </div>
 
             {/* FAQ Section */}
             <section className="mt-32 mb-20">
@@ -1679,12 +1701,36 @@ export default function App() {
               </div>
             </div>
 
-            {/* Embedded Interactive Google Map */}
-            <div className="mb-8">
-              <GoogleMapWidget 
-                title="Store Map & Directions - Doddanekundi, Bengaluru" 
-                onBookAppointment={() => setView('appointment-booking')} 
-              />
+            {/* Workshop & Service Center Hub Details */}
+            <div className="mb-8 p-6 sm:p-8 bg-slate-900 text-white rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-800">
+              <div className="space-y-2 max-w-xl">
+                <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full uppercase tracking-widest inline-block">
+                  Official Workshop & Hub
+                </span>
+                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  iPixel Electronics Doddanekundi Workshop
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+                  #22, 3rd A Cross Rd, Gururaja Layout, Doddanekundi, Bengaluru, Karnataka 560037. Walk-in repairs, diagnostic inspections, and clean-room panel bonding facility.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+                <a 
+                  href="https://wa.me/919513134313"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-3 bg-[#25D366] hover:bg-[#20ba56] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>WhatsApp Workshop</span>
+                </a>
+                <button 
+                  onClick={() => setView('appointment-booking')}
+                  className="px-5 py-3 bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold rounded-xl transition-all shadow-md active:scale-95"
+                >
+                  Book Appointment
+                </button>
+              </div>
             </div>
 
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
@@ -2253,71 +2299,6 @@ export default function App() {
               setView('location'); 
             }} 
           />
-        ) : view === 'directions' ? (
-          <motion.main 
-            key="directions"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            className="max-w-7xl mx-auto px-4 sm:px-6 py-12"
-          >
-            {/* Header & Back Button */}
-            <div className="flex items-center gap-4 mb-8">
-              <button 
-                onClick={() => setView('home')}
-                className="w-10 h-10 rounded-2xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 hover:text-black transition-all active:scale-95 cursor-pointer"
-                title="Back to Home"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <div>
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
-                  <span className="cursor-pointer hover:text-black" onClick={() => setView('home')}>Home</span>
-                  <span>/</span>
-                  <span className="text-blue-600">Travel Times &amp; Directions</span>
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight mt-1">
-                  Estimated Travel Times &amp; Directions
-                </h1>
-              </div>
-            </div>
-
-            {/* Commute Directions Map Component */}
-            <CommuteDirectionsMap onBookPickup={() => setView('appointment-booking')} />
-
-            {/* Explanatory Info Cards below Map */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
-                  <Car className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-bold text-gray-900 mb-2">Driving &amp; Two-Wheeler Routes</h3>
-                <p className="text-xs text-gray-500 leading-relaxed font-medium">
-                  Optimized vehicle routing via Outer Ring Road, Whitefield Main Road, and Varthur Road with real-time traffic condition estimates.
-                </p>
-              </div>
-
-              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
-                  <Bus className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-bold text-gray-900 mb-2">BMTC Bus &amp; Metro Transit</h3>
-                <p className="text-xs text-gray-500 leading-relaxed font-medium">
-                  Direct connections to Kundalahalli Metro Station (Purple Line) and major BMTC bus bays across Marathahalli &amp; KR Puram.
-                </p>
-              </div>
-
-              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
-                  <Truck className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-bold text-gray-900 mb-2">Doorstep Pickup Service</h3>
-                <p className="text-xs text-gray-500 leading-relaxed font-medium">
-                  Too busy to travel? We offer free doorstep pickup &amp; delivery of your TV across our entire 8 km service radius.
-                </p>
-              </div>
-            </div>
-          </motion.main>
         ) : (
           <motion.main 
             key="screen-issue"
@@ -2418,21 +2399,21 @@ export default function App() {
                     Doddanekkundi, Bengaluru, Karnataka 560037
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <button 
-                      onClick={() => setView('service-centers')}
+                    <a 
+                      href="tel:+919513134313"
                       className="px-3 py-1.5 bg-slate-900 hover:bg-black text-white text-[11px] font-bold rounded-lg transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                     >
-                      <MapPin className="w-3 h-3 text-red-400 fill-red-400" />
-                      <span>View Google Map</span>
-                    </button>
+                      <Phone className="w-3 h-3 text-blue-400" />
+                      <span>+91 95131 34313</span>
+                    </a>
                     <a 
-                      href="https://www.google.com/maps/dir/?api=1&destination=ipixel+electronics+3rd+A+Cross+Rd+doddanekundi+Bengaluru+Karnataka+560037"
+                      href="https://wa.me/919513134313"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1.5"
                     >
-                      <Navigation className="w-3 h-3 text-blue-600" />
-                      <span>Get Directions</span>
+                      <MessageCircle className="w-3 h-3 text-[#25d366] fill-[#25d366]" />
+                      <span>WhatsApp Store</span>
                     </a>
                   </div>
                 </div>

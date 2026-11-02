@@ -28,7 +28,6 @@ import {
   PenTool
 } from 'lucide-react';
 import { getLocationBySlug, LOCATIONS_DATA, LocationData, LocationTestimonial } from '../data/locations';
-import { GoogleMapWidget } from './GoogleMapWidget';
 
 interface LocationLandingPageProps {
   locationSlug?: string;
@@ -648,24 +647,38 @@ export const LocationLandingPage: React.FC<LocationLandingPageProps> = ({
         </div>
       </section>
 
-      {/* Embedded Store Map & Directions Widget */}
+      {/* Workshop Hub & Doorstep Dispatch Info */}
       <section className="mb-16">
-        <div className="mb-6">
-          <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest inline-block mb-2">
-            Store Hub &amp; Google Map
-          </span>
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-            Main Workshop Location Serving {location.name}
-          </h2>
-          <p className="text-gray-500 text-xs sm:text-sm font-medium mt-1">
-            Located in Doddanekundi, Bengaluru for fast dispatch to {location.name} ({location.doorstepTime}).
-          </p>
+        <div className="p-6 sm:p-8 bg-slate-900 text-white rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-800">
+          <div className="space-y-3 max-w-xl">
+            <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full uppercase tracking-widest inline-block">
+              Dedicated Service Hub
+            </span>
+            <h2 className="text-2xl font-black text-white tracking-tight">
+              Doddanekundi Central Workshop Serving {location.name}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+              #22, 3rd A Cross Rd, Gururaja Layout, Doddanekundi, Bengaluru 560037. Express doorstep technician dispatch to {location.name} in <strong>{location.doorstepTime}</strong> with 180-day repair warranty.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+            <a 
+              href={`https://wa.me/919513134313?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 bg-[#25D366] hover:bg-[#20ba56] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>WhatsApp Dispatch</span>
+            </a>
+            <button 
+              onClick={() => setView('appointment-booking')}
+              className="px-5 py-3 bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold rounded-xl transition-all shadow-md active:scale-95"
+            >
+              Book Doorstep Visit
+            </button>
+          </div>
         </div>
-
-        <GoogleMapWidget 
-          title={`Doddanekundi Main Workshop Serving ${location.name}`} 
-          onBookAppointment={() => setView('appointment-booking')} 
-        />
       </section>
 
       {/* Localized FAQs */}
